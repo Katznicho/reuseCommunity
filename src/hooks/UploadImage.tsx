@@ -35,7 +35,7 @@ export const UploadImage = async (uid: any, imagePicked: any, folder_name: strin
     //update the user document with the new photoURL
     if (isProfileImage) {
       await firestore().collection(USER_COLLECTION).doc(uid).update({
-       displayPicture: url,
+        displayPicture: url,
       });
     }
     //set image to the url

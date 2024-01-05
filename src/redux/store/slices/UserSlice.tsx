@@ -4,9 +4,9 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface UserState {
   isLoggedIn: boolean;
-  appIntro: boolean;
   user: User
-  userProfile: UserProfile | null
+  authToken: string
+
 
 }
 
@@ -17,35 +17,25 @@ interface User {
   email: string;
   isVerified: boolean;
   phone: string;
-  username: string;
   displayPicture: string,
-  community: string,
   reuseType: string,
 }
 
-interface UserProfile {
-  gender?: string
-  preferences?: string[]
-  reuser?: string
-}
+
 
 const initialState: UserState = {
   isLoggedIn: false,
-  appIntro: false,
   user: {
     UID: '',
     fname: '',
     lname: '',
     email: '',
-    username: '',
-    community: '',
     displayPicture: '',
     reuseType: "",
     isVerified: false,
     phone: ""
-
   },
-  userProfile: null
+  authToken: '',
 };
 
 export const userSlice = createSlice({
@@ -56,9 +46,8 @@ export const userSlice = createSlice({
     updateUserState: (state, action: PayloadAction<UserState>) => {
 
       state.isLoggedIn = action.payload?.isLoggedIn;
-      state.appIntro = action.payload?.appIntro;
       state.user = action.payload?.user;
-
+      state.authToken = action.payload?.authToken;
     },
 
     logoutUser: state => {
@@ -68,42 +57,20 @@ export const userSlice = createSlice({
         fname: '',
         lname: '',
         email: '',
-        username: '',
-        community: '',
         displayPicture: '',
         reuseType: "",
         isVerified: false,
         phone: ""
       }
     },
-    setAppIntro: state => {
-      state.appIntro = true;
-    },
-    loginUser: (state, action: PayloadAction<User>) => {
-      state.isLoggedIn = true;
-      state.appIntro = true;
-      state.user = action.payload;
 
-    },
-    registerUser: (state, action: PayloadAction<User>) => {
-      state.isLoggedIn = true;
-      state.appIntro = false;
-      state.user = action.payload;
 
-    },
     updateIsLoggedIn: (state, action: PayloadAction<boolean>) => {
       state.isLoggedIn = action.payload;
     },
-    updateAppIntro: (state, action: PayloadAction<boolean>) => {
-      state.appIntro = action.payload;
-    },
-
-
-    updateUserProfile: (state, action: PayloadAction<any>) => {
-      state.userProfile = action.payload?.userProfile;
-    },
+    
     updateProfilePicture: (state, action: PayloadAction<string>) => {
-      
+
       if (state && state.user) {
         state.user.displayPicture = action.payload;
       }
@@ -115,13 +82,7 @@ export const userSlice = createSlice({
 export const {
   updateUserState,
   logoutUser,
-  setAppIntro,
-  loginUser,
-  updateUserProfile,
   updateProfilePicture,
-  registerUser,
-  updateIsLoggedIn,
-  updateAppIntro
 } = userSlice.actions;
 
 export default userSlice.reducer;

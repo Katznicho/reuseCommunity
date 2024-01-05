@@ -67,7 +67,26 @@ const MyProductDetails = () => {
                     </TouchableOpacity>
                 </View>
 
+                {
+                    params.item.status == PRODUCT_STATUS.ACCEPTED &&
+                    <View >
 
+
+                        <TouchableOpacity
+                            style={generalStyles.loginContainer}
+                            // onPress={() => onPressLogin()}
+                            onPress={() => navigation.navigate('PaymentSummary', {
+                                item: params.item,
+                                ownerDetails: ownerDetails
+                            })}
+                        >
+                            <Text style={generalStyles.loginText}>{'Make Payment'}</Text>
+                        </TouchableOpacity>
+                    </View>
+
+
+
+                }
             </ImageBackground>
 
             <View style={[generalStyles.flexStyles, { marginHorizontal: 10, marginVertical: 10, justifyContent: "space-between", alignItems: "center" }]}>

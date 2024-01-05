@@ -79,7 +79,7 @@ const DeliveryTabs = () => {
             />
 
             <Tab.Screen
-                name="Confirmed"
+                name="ConfirmedDelivery"
                 component={Confirmed}
                 options={{
                     tabBarLabel: 'Confirmed',

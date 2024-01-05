@@ -32,9 +32,6 @@ const PaymentSummary = () => {
 
     const handleOnRedirect = async (data: RedirectParams) => {
 
-        console.log("========payment data=========")
-        console.log(data)
-        console.log("========payment=================")
 
         if (data.status === 'successful') {
             //console.log("Payment Successful");

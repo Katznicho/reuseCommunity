@@ -62,19 +62,19 @@ export const useFirebase = () => {
 
 
   /**
-   * Registers a new user with the provided information.
+   * Registers a new user with the given email, password, username, first name, last name, user type, community name, and phone number.
    *
    * @param {string} email - The email of the user.
    * @param {string} password - The password of the user.
    * @param {string} username - The username of the user.
    * @param {string} firstName - The first name of the user.
    * @param {string} lastName - The last name of the user.
-   * @param {string} userType - The type of user.
-   * @param {string} communityName - The name of the community the user belongs to.
+   * @param {string} userType - The type of the user.
+   * @param {string} communityName - The name of the community.
    * @param {string} phoneNumber - The phone number of the user.
-   * @return {Promise<firebase.User | Error>} The user credentials or an error.
+   * @return {Promise<UserCredential | Error>} The registered user credential or an error if registration fails.
    */
-  const register = async (email: string, password: string, username: string, firstName: string, lastName: string, userType: string, communityName: string, phoneNumber: string) => {
+  const register = async (email: string, password: string, username: string, firstName: string, lastName: string, userType: String, communityName: string, phoneNumber: string) => {
     try {
       const userCredentials = await auth().createUserWithEmailAndPassword(email, password);
       const userUid = userCredentials.user.uid;
@@ -161,10 +161,9 @@ export const useFirebase = () => {
       const userDoc = await firestore().collection(USER_COLLECTION).doc(userUid).get();
 
 
-
-
       if (userDoc.exists) {
         const user = userDoc.data();
+        dispatch(setAppIntro());
         dispatch(loginUser({
           UID: userUid,
           fname: user?.firstName,
@@ -173,9 +172,10 @@ export const useFirebase = () => {
           username: user?.username,
           community: user?.communityName,
           isVerified: false,
-          phone: '',
-          displayPicture: '',
-          reuseType: ''
+          phone: user?.phoneNumber,
+          displayPicture: user?.displayPicture,
+          reuseType: user?.userType
+
         }))
       }
       // setState({ userInfo });
@@ -232,7 +232,6 @@ export const useFirebase = () => {
       }
 
 
-
       // setState({ userInfo });
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -268,7 +267,7 @@ export const useFirebase = () => {
           isVerified: false,
           phone: user?.phoneNumber,
           displayPicture: user?.displayPicture,
-          reuseType: user?.userType
+          reuseType: user?.reuseType
         }))
         dispatch(updateIsLoggedIn(true));
 
@@ -454,7 +453,6 @@ export const useFirebase = () => {
     try {
       const categoryDoc = await firestore().collection(CATEGORY_COLLECTION).doc(categoryId).get();
       if (categoryDoc.exists) {
-
         return categoryDoc.data();
       } else {
         console.log("Category not found.");
@@ -576,7 +574,7 @@ export const useFirebase = () => {
     try {
       const querySnapshot = await firestore()
         .collection(PRODUCT_COLLECTION)
-        .where('receiverCommunity', '==', userId) // Replace 'userId' with the actual field name
+        .where('userId', '==', userId) // Replace 'userId' with the actual field name
         .get();
 
       const products: any = [];
@@ -612,12 +610,29 @@ export const useFirebase = () => {
     }
   };
 
+  const getPaymentByPaymentId = async (paymentId: string) => {
+    try {
+      const paymentDoc = await firestore()
+        .collection(PAYMENT_COLLECTION)
+        .doc(paymentId)
+        .get();
+
+      if (paymentDoc.exists) {
+        return { id: paymentDoc.id, ...paymentDoc.data() };
+      } else {
+        return null;
+      }
+    } catch (error) {
+      throw error
+    }
+  };
+
   //get products by user id and status
   const getProductsByUserIdAndStatus = async (userId: string, status: string) => {
     try {
       const querySnapshot = await firestore()
         .collection(PRODUCT_COLLECTION)
-        .where('receiverCommunity', '==', userId)
+        .where('userId', '==', userId)
         .where('status', '==', status)
         .get();
 
@@ -642,7 +657,7 @@ export const useFirebase = () => {
     try {
       const querySnapshot = await firestore()
         .collection(PAYMENT_COLLECTION)
-        .where('receiverCommunity', '==', userId)
+        .where('userId', '==', userId)
         .where('status', '==', status)
         .get();
 
@@ -736,7 +751,7 @@ export const useFirebase = () => {
     try {
       const querySnapshot = await firestore()
         .collection(DELIVERY_COLLECTION)
-        .where('receiverCommunity', '==', userId)
+        .where('userId', '==', userId)
         .get();
 
       let deliveries: any = [];
@@ -746,6 +761,7 @@ export const useFirebase = () => {
         const deliveryData = documentSnapshot.data();
         // Await getProductByProductId and add it to the deliveryData
         const productDetails = await getProductByProductId(documentSnapshot.id);
+
         return {
           id: documentSnapshot.id,
           ...deliveryData,
@@ -762,65 +778,6 @@ export const useFirebase = () => {
       throw error;
     }
   };
-
-  const getPaymentByPaymentId = async (paymentId: string) => {
-    try {
-      const paymentDoc = await firestore()
-        .collection(PAYMENT_COLLECTION)
-        .doc(paymentId)
-        .get();
-
-      if (paymentDoc.exists) {
-        return { id: paymentDoc.id, ...paymentDoc.data() };
-      } else {
-        return null;
-      }
-    } catch (error) {
-      throw error
-    }
-  };
-
-  const getConfirmedOrUnconfirmedDeliveryDetails = async (userId: string, isConfirmed: boolean) => {
-    try {
-      const querySnapshot = await firestore()
-        .collection(DELIVERY_COLLECTION)
-        .where('receiverCommunity', '==', userId)
-        .where('isConfirmed', '==', isConfirmed)
-        .get();
-
-      let deliveries: any = [];
-
-      const deliveryPromises = querySnapshot.docs.map(async (documentSnapshot) => {
-        const deliveryData = documentSnapshot.data();
-
-        // Fetch product details
-        const productDetails = await getProductByProductId(deliveryData?.productId);
-
-
-
-
-
-        // Fetch receiver details
-        const receiverDetails = await getUserByUid(deliveryData.receiverCommunity);
-
-        const paymentDetails = await getPaymentByPaymentId(productDetails?.paymentId);
-
-        return {
-          id: documentSnapshot.id,
-          ...deliveryData,
-          product: productDetails,
-          receiver: receiverDetails,
-          payments: paymentDetails
-        };
-      });
-
-      deliveries = await Promise.all(deliveryPromises);
-      return deliveries;
-    } catch (error) {
-      console.error('Error fetching delivery details:', error);
-      throw error;
-    }
-  }
 
   const getDeliveryDetailsByStatus = async (userId: string, status: string) => {
     try {
@@ -874,6 +831,61 @@ export const useFirebase = () => {
   }
 
 
+  const getConfirmedOrUnconfirmedDeliveryDetails = async (userId: string, isConfirmed: boolean) => {
+    try {
+      const querySnapshot = await firestore()
+        .collection(DELIVERY_COLLECTION)
+        .where('userId', '==', userId)
+        .where('isConfirmed', '==', isConfirmed)
+        .get();
+
+      let deliveries: any = [];
+
+      const deliveryPromises = querySnapshot.docs.map(async (documentSnapshot) => {
+        const deliveryData = documentSnapshot.data();
+
+        // Fetch product details
+        const productDetails = await getProductByProductId(deliveryData?.productId);
+
+
+
+
+
+        // Fetch receiver details
+        const receiverDetails = await getUserByUid(deliveryData.receiverCommunity);
+
+        const paymentDetails = await getPaymentByPaymentId(productDetails?.paymentId);
+
+        return {
+          id: documentSnapshot.id,
+          ...deliveryData,
+          product: productDetails,
+          receiver: receiverDetails,
+          payments: paymentDetails
+        };
+      });
+
+      deliveries = await Promise.all(deliveryPromises);
+      return deliveries;
+    } catch (error) {
+      console.error('Error fetching delivery details:', error);
+      throw error;
+    }
+  }
+  const confirmDelivery = async (deliveryId: string) => {
+    try {
+      await firestore().collection(DELIVERY_COLLECTION).doc(deliveryId).update({
+        isConfirmed: true
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+
+
+
   // const getSpecificDeliveryDetailsById()
 
   //get all unread notifications
@@ -882,7 +894,7 @@ export const useFirebase = () => {
     try {
       const querySnapshot = await firestore()
         .collection(NOTIFICATION_COLLECTION)
-        .where('receiverCommunity', '==', userId)
+        .where('userId', '==', userId)
         .where('status', '==', notificationStatus.UNREAD)
         .get();
 
@@ -921,7 +933,7 @@ export const useFirebase = () => {
       // Query payments
       const paymentSnapshot = await firestore()
         .collection(PAYMENT_COLLECTION)
-        .where('receiverCommunity', '==', userId)
+        .where('userId', '==', userId)
         .get();
 
       const totalPaymentDocuments = paymentSnapshot.size;
@@ -929,7 +941,7 @@ export const useFirebase = () => {
       // Query delivery
       const deliverySnapshot = await firestore()
         .collection(DELIVERY_COLLECTION)
-        .where('receiverCommunity', '==', userId)
+        .where('userId', '==', userId)
         .get();
 
       const totalDeliveryDocuments = deliverySnapshot.size;
@@ -937,7 +949,7 @@ export const useFirebase = () => {
       // Query products
       const productsSnapshot = await firestore()
         .collection(PRODUCT_COLLECTION)
-        .where('receiverCommunity', '==', userId)
+        .where('userId', '==', userId)
         .get();
 
       const totalProductDocuments = productsSnapshot.size;
@@ -996,7 +1008,8 @@ export const useFirebase = () => {
     getDeliveryDetails,
     getDeliveryDetailsByStatus,
     getConfirmedOrUnconfirmedDeliveryDetails,
-    getUserTotals
+    getUserTotals,
+    confirmDelivery
 
 
     // Export other auth functions here if needed

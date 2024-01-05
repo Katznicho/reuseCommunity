@@ -3,15 +3,15 @@ import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { COLORS } from '../theme/theme';
 import { BlurView } from '@react-native-community/blur';
-import HomeScreen from '../screens/HomeScreen';
-
 import CustomIcon from '../components/CustomIcon';
 import { RootState } from '../redux/store/dev';
 import { useSelector } from 'react-redux';
-import ProfileStack from '../screens/ProfileScreens/ProfileStack';
-import MyNotificationStack from '../screens/Notifcations/MyNotificationStack';
+import ProfileStack from './ProfileStack';
+import MyNotificationStack from './MyNotificationStack';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import ReuseStack from '../screens/Reuse/ReuseStack';
+import CreateDonationProduct from '../screens/CreateScreens/CreateDonationProduct';
+import ReuseStack from './ReuseStack';
+import HomeStack from './HomeStack';
 
 
 const Tab = createBottomTabNavigator();
@@ -36,10 +36,11 @@ const TabNavigator = () => {
             style={styles.BlurViewStyles}
           />
         ),
-      }}>
+      }}
+    >
       <Tab.Screen
         name="HomeTab"
-        component={HomeScreen}
+        component={HomeStack}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <CustomIcon
@@ -51,7 +52,20 @@ const TabNavigator = () => {
             />
           ),
         }}></Tab.Screen>
-
+      <Tab.Screen
+        name="Reuse"
+        component={CreateDonationProduct}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <AntDesign
+              name="pluscircleo"
+              size={25}
+              color={
+                focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
+              }
+            />
+          ),
+        }}></Tab.Screen>
       <Tab.Screen
         name="Favorite"
         component={ReuseStack}
@@ -101,7 +115,7 @@ const TabNavigator = () => {
 
 const styles = StyleSheet.create({
   tabBarStyle: {
-    height: 80,
+    height: 60,
     position: 'absolute',
     backgroundColor: COLORS.primaryBlackRGBA,
     borderTopWidth: 0,

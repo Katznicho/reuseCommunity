@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Alert, Image } from 'react-native';
+import { Text, View, TouchableOpacity, Alert, Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { showMessage } from 'react-native-flash-message';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,8 +8,8 @@ import { updateProfilePicture } from '../redux/store/slices/UserSlice';
 import { UploadImage } from '../hooks/UploadImage';
 import { DEFAULT_USER_PROFILE, PROFILE_STORAGE } from '../screens/utils/constants/constants';
 import { generalStyles } from '../screens/utils/generatStyles';
-import AntDesign from "react-native-vector-icons/AntDesign";
 import { COLORS } from '../theme/theme';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const HeadProfileCard = () => {
 
@@ -75,8 +75,9 @@ const HeadProfileCard = () => {
                             }}
                         />
                         <View
-                            style={[generalStyles.absoluteStyles, { bottom: -0, right: -12 }]}
+                            style={[generalStyles.absoluteStyles, { bottom: -6, right: -15 }]}
                         >
+
 
                             <TouchableOpacity
                                 style={{

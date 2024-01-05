@@ -14,17 +14,34 @@ export const APP_USERS = {
 }
 
 export const PRODUCT_STATUS = {
-    ACCEPTED: "ACCEPTED",
-    PENDING: "PENDING",
-    REJECTED: "REJECTED",
+    ACCEPTED: "Accepted",
+    PENDING: "Pending",
+    REJECTED: "Rejected",
+
+}
+
+export const DELIVERY_STATUS = {
+    COMPLETED: "Completed",
+    PENDING: "Pending",
+    CONFIRMED: "Confirmed",
+    UNCONFIRMED: "Unconfirmed"
+
 
 }
 
 export const PAYMENT_STATUS = {
-    PENDING: "pending",
-    COMPLETED: "successful",
-    CANCELLED: "Cancelled",
-    UNPAID:"UNPAID"
+    PENDING: "Pending",
+    COMPLETED: "Completed",
+    CANCELLED: "Failed",
+    UNPAID: "UNPAID",
+    CONFIRMED: "Confirmed",
+    UNCONFIRMED: "UnConfirmed"
+}
+
+export const PAYMENT_TYPE = {
+    "Wallet": "Wallet",
+    "Donation": "Donation",
+    "Product": "Product"
 }
 
 export const APP_NAME = "Reuse";

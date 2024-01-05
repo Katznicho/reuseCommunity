@@ -20,7 +20,7 @@ const { width } = Dimensions.get('window');
 const PaymentDetails = () => {
     const { item } = useRoute<any>().params;
 
-    const { } = useFirebase();
+
 
 
 

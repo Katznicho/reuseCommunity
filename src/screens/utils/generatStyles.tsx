@@ -1,10 +1,10 @@
-import { Dimensions, StyleSheet } from "react-native";
+import {  StyleSheet } from "react-native";
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from "../../theme/theme";
 
 export const generalStyles = StyleSheet.create({
   ScreenContainer: {
     flex: 1,
-    backgroundColor: COLORS.primaryBlackHex,
+    backgroundColor: COLORS.primaryLightWhiteGrey,
   },
   ScrollViewFlex: {
     flexGrow: 1,
@@ -41,26 +41,30 @@ export const generalStyles = StyleSheet.create({
     alignItems: 'center',
   },
   bottomHairline: {
-    borderBottomColor: COLORS.primaryWhiteHex,
+    borderBottomColor: COLORS.primaryOrangeHex,
     borderBottomWidth: 3,
     marginRight: 10,
     marginLeft: 20,
     width: 100,
   },
   authTitle: {
-    fontSize: 25,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontFamily: FONTFAMILY.poppins_regular,
     color: COLORS.primaryOrangeHex,
     marginTop: 25,
-    marginBottom: 10,
+    marginBottom: 8,
     alignSelf: 'stretch',
     textAlign: 'left',
     marginLeft: 30,
   },
+  textStyle: {
+    fontFamily: FONTFAMILY.poppins_light,
+    color: COLORS.primaryWhiteHex,
+    fontSize: 15,
+  },
   errorText: {
     color: COLORS.primaryRedHex,
     fontSize: 14,
-    marginBottom: 5,
   },
   InputContainer: {
     height: 42,
@@ -75,6 +79,7 @@ export const generalStyles = StyleSheet.create({
     marginVertical: 10,
     alignItems: 'center',
     elevation: 5,
+
     textAlign: "center"
   },
   loginContainer: {
@@ -85,10 +90,53 @@ export const generalStyles = StyleSheet.create({
     marginTop: 30,
     alignSelf: 'center',
     alignItems: 'center',
+
   },
-  
+  forgotPasswordContainer: {
+    alignSelf: "flex-end",
+    marginHorizontal: 20
+  },
+  forgotText: {
+    color: COLORS.primaryOrangeHex,
+    fontFamily: FONTFAMILY.poppins_light,
+  },
   loginText: {
-    color: '#ffffff',
+    color: COLORS.primaryBlackHex,
+    fontFamily: FONTFAMILY.poppins_light,
+    // fontFamily: FONTFAMILY.poppins_medium,
+
+
   },
+
+  formInput: {
+    color: COLORS.primaryWhiteHex,
+    fontSize: 15,
+    borderBottomColor: COLORS.primaryWhiteHex,
+    borderBottomWidth: 1,
+    // paddingBottom: 2,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    marginTop: 5,
+    // marginHorizontal: 20
+  },
+  formContainer: {
+    marginVertical: 10,
+    marginHorizontal: 25
+  },
+  titleHeaderStyles: {
+    fontSize: 25,
+    fontFamily: FONTFAMILY.poppins_extrabold,
+  },
+  formInputTextStyle: {
+    fontSize: 20,
+    fontFamily: FONTFAMILY.poppins_semibold,
+    color: COLORS.primaryWhiteHex
+  },
+  headerStyle: {
+    backgroundColor: COLORS.primaryOrangeHex
+  },
+  scrollViewContentPadding: {
+    paddingBottom: 100
+  }
 
 });

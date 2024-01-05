@@ -9,7 +9,6 @@ const ProfilePic = () => {
 
   const { user } = useSelector((state: RootState) => state.user);
 
-
   return (
     <View style={styles.ImageContainer}>
       <Image

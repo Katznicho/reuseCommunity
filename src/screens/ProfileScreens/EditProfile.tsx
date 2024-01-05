@@ -29,15 +29,14 @@ const EditProfile = () => {
                     fontSize: 20,
                     color: COLORS.primaryWhiteHex
                 }}>
-                    Community Name</Text>
+                    First Name</Text>
             </View>
-
             <TextInput
                 style={generalStyles.InputContainer}
                 placeholder={'enter first name'}
                 placeholderTextColor={COLORS.primaryWhiteHex}
                 //   onChange={}
-                value={user?.community}
+                value={user?.fname}
                 underlineColorAndroid="transparent"
                 autoCapitalize="none"
             />
@@ -47,17 +46,26 @@ const EditProfile = () => {
                     fontSize: 20,
                     color: COLORS.primaryWhiteHex
                 }}>
-                    Email</Text>
+                    Last Name</Text>
             </View>
             <TextInput
                 style={generalStyles.InputContainer}
                 placeholder={'enter first name'}
                 placeholderTextColor={COLORS.primaryWhiteHex}
                 //   onChange={}
-                value={user?.email}
+                value={user?.fname}
                 underlineColorAndroid="transparent"
                 autoCapitalize="none"
             />
+
+            <View style={generalStyles.centerContent}>
+                <Text style={{
+                    fontSize: 20,
+                    color: COLORS.primaryWhiteHex
+                }}>
+                    Phone Number </Text>
+            </View>
+
             <TextInput
                 style={generalStyles.InputContainer}
                 placeholder={'enter first name'}
@@ -85,6 +93,7 @@ const EditProfile = () => {
                 underlineColorAndroid="transparent"
                 autoCapitalize="none"
             />
+
 
             <TouchableOpacity
                 style={generalStyles.loginContainer}

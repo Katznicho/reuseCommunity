@@ -22,9 +22,22 @@ const DeliveryDetails = () => {
     console.log(item.id);
     const navigation = useNavigation<any>();
 
+    const { confirmDelivery } = useFirebase();
 
+    const onConfirmDelivery = () => {
+        confirmDelivery(item.id);
+        showMessage({
+            message: "Delivery Confirmed",
+            description: "Delivery has been confirmed",
+            type: "success",
+            icon: "success",
+            autoHide: true,
+            duration: 3000
 
-    
+        })
+        navigation.navigate("ConfirmedDelivery");
+
+    }
 
 
 
@@ -211,6 +224,16 @@ const DeliveryDetails = () => {
                         </View>
                 }
 
+                {
+                    !item.isConfirmed && (<TouchableOpacity
+                        style={[generalStyles.loginContainer, {
+                            marginTop: 5,
+                            marginBottom: 20
+                        }]}
+                        onPress={() => onConfirmDelivery()}>
+                        <Text style={generalStyles.loginText}>{'Confirm Delivery'}</Text>
+                    </TouchableOpacity>)
+                }
 
 
                 {/* card */}
