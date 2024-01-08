@@ -2,7 +2,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import React, { useState } from 'react'
 import { generalStyles } from '../utils/generatStyles'
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Keyboard } from 'react-native'
-import { useFirebase } from '../../hooks/useFirebase'
 import { COLORS } from '../../theme/theme'
 import { useNavigation } from '@react-navigation/native'
 import { ActivityIndicator } from '../../components/ActivityIndicator'
@@ -15,8 +14,7 @@ import { validateEmail } from '../utils/helpers/helpers'
 const Register = () => {
 
   const navigation = useNavigation<any>();
-  const [firstName, setFirstName] = React.useState<any>('');
-  const [lastName, setLastName] = React.useState<any>('');
+  const [communityName, setCommunityName] = React.useState<any>('');
   const [phoneNumber, setPhoneNumber] = React.useState<any>('');
   const [email, setEmail] = React.useState<any>('');
   const [password, setPassword] = React.useState<any>('');
@@ -24,8 +22,7 @@ const Register = () => {
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<any>({
-    firstName: '',
-    lastName: '',
+    communityName: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -70,8 +67,7 @@ const Register = () => {
     }
 
     const trimmedFields = {
-      firstName: firstName.trim(),
-      lastName: lastName.trim(),
+      communityName: communityName.trim(),
       email: email.trim(),
       password: password.trim(),
       confirmPassword: confirmPassword.trim(),
@@ -89,9 +85,8 @@ const Register = () => {
       body.append('email', email.toLowerCase());
       body.append('password', password);
       body.append("phone_number", phoneNumber)
-      body.append("first_name", firstName);
-      body.append("last_name", lastName);
-      body.append("role", APP_USERS.DONOR);
+      body.append("community_name", communityName);
+      body.append("role", APP_USERS.RECEIVER);
       body.append("confirm_password", confirmPassword);
       fetch(`${REGISTER}`, {
         method: 'POST',
@@ -222,49 +217,27 @@ const Register = () => {
         <View style={generalStyles.formContainer}>
           <View>
             <Text style={generalStyles.formInputTextStyle}>
-              First Name</Text>
+              Community Name</Text>
           </View>
 
           <TextInput
             style={generalStyles.formInput}
-            placeholder={'enter first name'}
+            placeholder={'enter community'}
             keyboardType="default"
             placeholderTextColor={COLORS.primaryWhiteHex}
-            onChangeText={text => setFirstName(text)}
-            value={firstName}
+            onChangeText={text => setCommunityName(text)}
+            value={communityName}
             underlineColorAndroid="transparent"
             autoCapitalize="none"
           />
           <View>
-            {errors.firstName && <Text style={generalStyles.errorText}>{errors.firstName}</Text>}
+            {errors.communityName && <Text style={generalStyles.errorText}>{errors.communityName}</Text>}
           </View>
 
         </View>
         {/* first name */}
 
-        {/* last name */}
-        <View style={generalStyles.formContainer}>
-          <View>
-            <Text style={generalStyles.formInputTextStyle}>
-              Last Name</Text>
-          </View>
 
-          <TextInput
-            style={generalStyles.formInput}
-            placeholder={'enter last name'}
-            keyboardType="default"
-            placeholderTextColor={COLORS.primaryWhiteHex}
-            onChangeText={text => setLastName(text)}
-            value={lastName}
-            underlineColorAndroid="transparent"
-            autoCapitalize="none"
-          />
-          <View>
-            {errors.lastName && <Text style={generalStyles.errorText}>{errors.lastName}</Text>}
-          </View>
-
-        </View>
-        {/* last name */}
 
 
         {/* phone number */}

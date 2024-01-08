@@ -52,20 +52,7 @@ const TabNavigator = () => {
             />
           ),
         }}></Tab.Screen>
-      <Tab.Screen
-        name="Reuse"
-        component={CreateDonationProduct}
-        options={{
-          tabBarIcon: ({ focused, color, size }) => (
-            <AntDesign
-              name="pluscircleo"
-              size={25}
-              color={
-                focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
-              }
-            />
-          ),
-        }}></Tab.Screen>
+
       <Tab.Screen
         name="Favorite"
         component={ReuseStack}
