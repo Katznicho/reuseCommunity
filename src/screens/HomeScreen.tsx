@@ -24,13 +24,11 @@ import { useShowGreeting } from '../hooks/useShowGreetings';
 import messaging from '@react-native-firebase/messaging';
 import Geolocation from '@react-native-community/geolocation';
 import { generalStyles } from './utils/generatStyles';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DeviceInfo from 'react-native-device-info';
 import { SAVE_DEVICE_INFO } from './utils/constants/routes';
 import { usePostQuery } from '../hooks/usePostQuery';
-import axiosInstance from '../axios/axios';
 import UserWallet from '../components/UserWallet';
+import Totals from '../components/Totals';
 
 
 
@@ -40,7 +38,7 @@ const HomeScreen = ({ navigation }: any) => {
 
   const [position, setPosition] = useState<any>(null);
 
-  const { data, error, isLoading, refetch } = usePostQuery<any>({
+  const { data, error, isLoading, } = usePostQuery<any>({
     endpoint: '/auth/hasWalletAccount',
     params: {
       "account": "hasWalletAccount"
@@ -52,6 +50,8 @@ const HomeScreen = ({ navigation }: any) => {
       refetchOnMount: true,
     },
   })
+
+
 
 
 
@@ -188,84 +188,9 @@ const HomeScreen = ({ navigation }: any) => {
         {/* header */}
 
 
-        <View style={[generalStyles.flexStyles]}>
-
-          <TouchableOpacity style={[styles.cardStyles]}
-            onPress={
-              () => navigation.navigate('Payments')
-            }
-          >
-
-            <View>
-              <FontAwesome name="refresh"
-                style={[styles.iconStyles]}
-                size={50}
-                color={COLORS.primaryWhiteHex}
-              />
-            </View>
-
-            <Text style={[styles.textStyles]}>{totals?.totalPaymentDocuments} Total Payments</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.cardStyles]}
-            onPress={
-              () => navigation.navigate('Payments')
-            }
-          >
-
-            <View>
-              <FontAwesome name="product-hunt"
-                style={[styles.iconStyles]}
-                size={50}
-                color={COLORS.primaryWhiteHex}
-              />
-            </View>
-
-            <Text style={[styles.textStyles]}>{totals?.totalProductDocuments} Total Products</Text>
-          </TouchableOpacity>
-
-        </View>
-
-        <View style={[generalStyles.flexStyles]}>
-
-          <TouchableOpacity style={[styles.cardStyles]}
-            onPress={
-              () => navigation.navigate('Payments')
-            }
-          >
-
-            <View>
-              <FontAwesome name="users"
-                style={[styles.iconStyles]}
-                size={50}
-                color={COLORS.primaryWhiteHex}
-              />
-            </View>
-
-            <Text style={[styles.textStyles]}>{communityTotal?.length} Total Communities</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.cardStyles]}
-            onPress={
-              () => navigation.navigate('Deliveries')
-            }
-          >
-
-            <View>
-              <MaterialCommunityIcons name="truck-delivery-outline"
-                style={[styles.iconStyles]}
-                size={50}
-                color={COLORS.primaryWhiteHex}
-              />
-            </View>
-
-            <Text style={[styles.textStyles]}>{totals?.totalDeliveryDocuments} Delivered Products</Text>
-          </TouchableOpacity>
-
-        </View>
-
-
-
+        {/* totals */}
+        {/* <Totals /> */}
+        {/* totals */}
 
       </ScrollView>
     </View>

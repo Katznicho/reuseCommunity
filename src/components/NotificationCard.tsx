@@ -4,16 +4,12 @@ import { COLORS } from '../theme/theme';
 import { generalStyles } from '../screens/utils/generatStyles';
 
 
-
-
-
 const NotificationCard = ({
   // id,
   type,
   time,
   description,
 }: any) => {
-
 
 
   return (
@@ -23,7 +19,7 @@ const NotificationCard = ({
           <Text style={[styles.textColor, { fontWeight: 'bold' }]}>{type}</Text>
         </View>
         <View style={[generalStyles.resideViews, styles.textStyles]}>
-          <Text>{description}</Text>
+          <Text style={[generalStyles.textStyle]}>{description}</Text>
         </View>
       </View>
       <View>

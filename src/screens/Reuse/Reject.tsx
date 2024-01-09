@@ -66,15 +66,7 @@ const Rejected = () => {
                     <EmptyListAnimation
                         title={'You dont have any products'}
                     />
-                    <View>
 
-                        <TouchableOpacity
-                            style={generalStyles.loginContainer}
-                            onPress={() => navigation.navigate('Create')}
-                        >
-                            <Text style={generalStyles.loginText}>{'Create Products'}</Text>
-                        </TouchableOpacity>
-                    </View>
 
                 </View>
             }
