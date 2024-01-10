@@ -311,21 +311,6 @@ const DeliveryDetails = () => {
                         </View>
                 }
 
-                {
-                    item.status == "Pending" && (<TouchableOpacity
-                        disabled={loading}
-                        style={[generalStyles.loginContainer, {
-                            marginTop: 5,
-                            marginBottom: 20
-                        }]}
-                        onPress={() => onConfirmDelivery()}>
-                        <Text style={generalStyles.loginText}>{'Confirm Delivery'}</Text>
-                    </TouchableOpacity>)
-                }
-                {loading && <ActivityIndicator />}
-
-
-
 
                 {/* card */}
             </ScrollView>

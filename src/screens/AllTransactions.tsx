@@ -14,21 +14,12 @@ const AllTransactions = () => {
     console.log("==========data=====================")
 
 
-
-
-
-
-
-
-
     //flat the data
     // const flattenedData = data?.pages.flatMap(page => page.results) || [];
     const paymentData = data?.pages.flatMap(page => page.data);
 
     console.log("=============payment data length==========================")
     console.log(paymentData?.length);
-
-
 
 
 

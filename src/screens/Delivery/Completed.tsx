@@ -1,17 +1,15 @@
 import {
-    Text,
     View,
     SafeAreaView,
-    TouchableOpacity,
 } from 'react-native';
 import React from 'react';
 import EmptyListAnimation from '../../components/EmptyListAnimation';
 import { generalStyles } from '../utils/generatStyles';
-import ProductFlatlist from '../../components/ProductFlatlist';
 import { useNavigation } from '@react-navigation/native';
 import useFetchInfinite from '../../hooks/useFetchInfinite';
 import { DELIVERY_STATUS } from '../utils/constants/constants';
-import { USERDELIVERIES } from '../utils/constants/routes';
+import { COMMUNITY_DELIVERIES } from '../utils/constants/routes';
+import DeliveryFlatlist from '../../components/DeliveryFlatlist';
 
 
 
@@ -22,29 +20,17 @@ const Completed = () => {
 
     const navigation = useNavigation<any>();
 
-    const { isError, data, error, fetchNextPage, hasNextPage, isFetching } = useFetchInfinite(`${DELIVERY_STATUS.COMPLETED} DELIVERY `, USERDELIVERIES, DELIVERY_STATUS.COMPLETED);
+    const { isError, data, error, fetchNextPage, hasNextPage, isFetching } = useFetchInfinite(`${DELIVERY_STATUS.COMPLETED} DELIVERY `, COMMUNITY_DELIVERIES, DELIVERY_STATUS.COMPLETED);
     console.log("=========== data=========================")
-    console.log(data?.pages[0].total)
+    console.log(data?.pages[0].data)
     console.log("==========data=====================")
-
-
-
-
-
-
-
-
 
     //flat the data
     // const flattenedData = data?.pages.flatMap(page => page.results) || [];
     const productData = data?.pages.flatMap(page => page.data);
 
     console.log("=============payment data length==========================")
-    console.log(productData?.length);
-
-
-
-
+    // console.log(productData?.length);
 
     const loadMoreData = () => {
         if (hasNextPage && !isFetching && data?.pages[0].total !== productData?.length) return fetchNextPage()
@@ -64,13 +50,11 @@ const Completed = () => {
                     <EmptyListAnimation
                         title={'You dont have any completed    deliveries'}
                     />
-
-
                 </View>
             }
 
-            <ProductFlatlist
-                productData={productData}
+            <DeliveryFlatlist
+                deliveryData={productData}
                 loadMoreData={loadMoreData}
                 isFetching={isFetching}
             />
@@ -79,6 +63,6 @@ const Completed = () => {
     );
 };
 
-export default  Completed;
+export default Completed;
 
 

@@ -7,11 +7,11 @@ import {
 import React from 'react';
 import EmptyListAnimation from '../../components/EmptyListAnimation';
 import { generalStyles } from '../utils/generatStyles';
-import ProductFlatlist from '../../components/ProductFlatlist';
 import { useNavigation } from '@react-navigation/native';
 import useFetchInfinite from '../../hooks/useFetchInfinite';
 import { DELIVERY_STATUS } from '../utils/constants/constants';
-import { USERDELIVERIES } from '../utils/constants/routes';
+import { COMMUNITY_DELIVERIES } from '../utils/constants/routes';
+import DeliveryFlatlist from '../../components/DeliveryFlatlist';
 
 
 
@@ -22,7 +22,7 @@ const Pending = () => {
 
     const navigation = useNavigation<any>();
 
-    const { isError, data, error, fetchNextPage, hasNextPage, isFetching } = useFetchInfinite(`${DELIVERY_STATUS.PENDING} DELIVERY `, USERDELIVERIES, DELIVERY_STATUS.PENDING);
+    const { isError, data, error, fetchNextPage, hasNextPage, isFetching } = useFetchInfinite(`${DELIVERY_STATUS.PENDING} DELIVERY `, COMMUNITY_DELIVERIES, DELIVERY_STATUS.PENDING);
     console.log("=========== data=========================")
     console.log(data?.pages[0].total)
     console.log("==========data=====================")
@@ -64,21 +64,11 @@ const Pending = () => {
                     <EmptyListAnimation
                         title={'You dont have any pending deliveries'}
                     />
-                    <View>
-
-                        <TouchableOpacity
-                            style={generalStyles.loginContainer}
-                            onPress={() => navigation.navigate('Create')}
-                        >
-                            <Text style={generalStyles.loginText}>{'Create Products'}</Text>
-                        </TouchableOpacity>
-                    </View>
 
                 </View>
             }
-
-            <ProductFlatlist
-                productData={productData}
+            <DeliveryFlatlist
+                deliveryData={productData}
                 loadMoreData={loadMoreData}
                 isFetching={isFetching}
             />

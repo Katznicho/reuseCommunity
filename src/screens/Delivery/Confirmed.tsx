@@ -1,17 +1,15 @@
 import {
-    Text,
     View,
     SafeAreaView,
-    TouchableOpacity,
 } from 'react-native';
 import React from 'react';
 import EmptyListAnimation from '../../components/EmptyListAnimation';
 import { generalStyles } from '../utils/generatStyles';
-import ProductFlatlist from '../../components/ProductFlatlist';
 import { useNavigation } from '@react-navigation/native';
 import useFetchInfinite from '../../hooks/useFetchInfinite';
 import { DELIVERY_STATUS } from '../utils/constants/constants';
-import { USERDELIVERIES } from '../utils/constants/routes';
+import { COMMUNITY_DELIVERIES } from '../utils/constants/routes';
+import DeliveryFlatlist from '../../components/DeliveryFlatlist';
 
 
 
@@ -22,7 +20,7 @@ const Confirmed = () => {
 
     const navigation = useNavigation<any>();
 
-    const { isError, data, error, fetchNextPage, hasNextPage, isFetching } = useFetchInfinite(`${DELIVERY_STATUS.CONFIRMED} DELIVERY `, USERDELIVERIES, DELIVERY_STATUS.CONFIRMED);
+    const { isError, data, error, fetchNextPage, hasNextPage, isFetching } = useFetchInfinite(`${DELIVERY_STATUS.CONFIRMED} DELIVERY `, COMMUNITY_DELIVERIES, DELIVERY_STATUS.CONFIRMED);
     console.log("=========== data=========================")
     console.log(data?.pages[0].total)
     console.log("==========data=====================")
@@ -69,8 +67,8 @@ const Confirmed = () => {
                 </View>
             }
 
-            <ProductFlatlist
-                productData={productData}
+            <DeliveryFlatlist
+                deliveryData={productData}
                 loadMoreData={loadMoreData}
                 isFetching={isFetching}
             />
@@ -79,6 +77,6 @@ const Confirmed = () => {
     );
 };
 
-export default  Confirmed;
+export default Confirmed;
 
 

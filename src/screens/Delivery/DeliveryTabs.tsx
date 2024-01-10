@@ -3,7 +3,6 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { COLORS } from '../../theme/theme';
 import Completed from './Completed';
 import Pending from './Pending';
-import UnConfirmed from './UnConfirmed';
 import Confirmed from './Confirmed';
 
 
@@ -68,15 +67,7 @@ const DeliveryTabs = () => {
                     //add some styling here
                 }}
             />
-            <Tab.Screen
-                name="UnConfirmed"
-                component={UnConfirmed}
-                options={{
-                    tabBarLabel: 'UnConfirmed',
-                    tabBarAccessibilityLabel: 'UnConfirmed',
-                    //add some styling here
-                }}
-            />
+
 
             <Tab.Screen
                 name="ConfirmedDelivery"

@@ -15,6 +15,7 @@ export const UPDATEWALLETBALANCE = `${BASE_URL}/auth/updateShowWalletBalance`
 export const PROCESSORDER = `${BASE_URL}/processOrder`;
 export const USERPAYMENTS = `${BASE_URL}/getUserPayments`;
 export const USERPRODUCTS = `${BASE_URL}/getUserProducts`
+
 export const USERDELIVERIES = `${BASE_URL}/getUserDelivries`
 export const USERNOTIFICATIONS = `${BASE_URL}/getUserNotifications`
 
@@ -23,6 +24,7 @@ export const USERNOTIFICATIONS = `${BASE_URL}/getUserNotifications`
 export const GET_COMMUNITY_DETAILS = `${BASE_URL}/getCommunityDetails`
 export const GET_COMMUNITY_TOTALS = `${BASE_URL}/getCommunityTotals`
 export const GET_COMMUNITIES = `${BASE_URL}/getCommunitysByPage`
+export const COMMUNITY_DELIVERIES = `${BASE_URL}/getCommunityDeliveries`
 
 
 //donor
