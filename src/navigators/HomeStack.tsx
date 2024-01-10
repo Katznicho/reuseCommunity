@@ -13,6 +13,7 @@ import AllTransactions from '../screens/AllTransactions';
 import TransactionDetails from '../screens/TransactionDetails';
 import DetailsScreen from '../screens/DetailsScreen';
 import CartScreen from '../screens/CartScreen';
+import PaymentScreen from '../screens/PaymentScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -184,6 +185,36 @@ const HomeStack = () => {
             >
             </Stack.Screen>
             {/* cart item */}
+
+            {/* payments screen  */}
+            <Stack.Screen
+                name="Payment"
+                component={PaymentScreen}
+
+                options={{
+                    animation: 'slide_from_bottom',
+                    title: 'Payment',
+                    headerStyle: generalStyles.headerStyle,
+                    headerTitleStyle: generalStyles.titleHeaderStyles,
+                    headerTintColor: COLORS.primaryBlackHex,
+                    headerTitleAlign: 'center',
+                    headerLeft: () => (
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPress={() => navigation.goBack()}
+                            style={{ marginLeft: 10 }}
+                        >
+                            <Entypo
+                                name="chevron-left"
+                                color={COLORS.primaryBlackHex}
+                                size={28}
+                            />
+                        </TouchableOpacity>
+                    ),
+                }}
+            >
+            </Stack.Screen>
+            {/* payments screen */}
         </Stack.Navigator>
     )
 }

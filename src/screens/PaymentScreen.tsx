@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -15,12 +15,12 @@ import {
   SPACING,
 } from '../theme/theme';
 import GradientBGIcon from '../components/GradientBGIcon';
-import PaymentMethod from '../components/PaymentMethod';
 import PaymentFooter from '../components/PaymentFooter';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomIcon from '../components/CustomIcon';
-import {useStore} from '../store/store';
+import { useStore } from '../store/store';
 import PopUpAnimation from '../components/PopUpAnimation';
+import PaymentMethod from '../components/PaymentMethod';
 
 const PaymentList = [
   {
@@ -45,7 +45,7 @@ const PaymentList = [
   },
 ];
 
-const PaymentScreen = ({navigation, route}: any) => {
+const PaymentScreen = ({ navigation, route }: any) => {
   const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
   const addToOrderHistoryListFromCart = useStore(
     (state: any) => state.addToOrderHistoryListFromCart,
@@ -66,8 +66,6 @@ const PaymentScreen = ({navigation, route}: any) => {
 
   return (
     <View style={styles.ScreenContainer}>
-      <StatusBar backgroundColor={COLORS.primaryBlackHex} />
-
       {showAnimation ? (
         <PopUpAnimation
           style={styles.LottieAnimation}
@@ -113,8 +111,8 @@ const PaymentScreen = ({navigation, route}: any) => {
               <Text style={styles.CreditCardTitle}>Credit Card</Text>
               <View style={styles.CreditCardBG}>
                 <LinearGradient
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 1}}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
                   style={styles.LinearGradientStyle}
                   colors={[COLORS.primaryGreyHex, COLORS.primaryBlackHex]}>
                   <View style={styles.CreditCardRow}>
@@ -174,7 +172,7 @@ const PaymentScreen = ({navigation, route}: any) => {
 
       <PaymentFooter
         buttonTitle={`Pay with ${paymentMode}`}
-        price={{price: route.params.amount, currency: '$'}}
+        price={{ price: route.params.amount, currency: '$' }}
         buttonPressHandler={buttonPressHandler}
       />
     </View>
