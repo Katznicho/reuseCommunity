@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
-import {useStore} from '../store/store';
-import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
+import React, { useState } from 'react';
+import { useStore } from '../store/store';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import {
   BORDERRADIUS,
   COLORS,
@@ -21,12 +21,12 @@ import EmptyListAnimation from '../components/EmptyListAnimation';
 import PopUpAnimation from '../components/PopUpAnimation';
 import OrderHistoryCard from '../components/OrderHistoryCard';
 
-const OrderHistoryScreen = ({navigation}: any) => {
+const OrderHistoryScreen = ({ navigation }: any) => {
   const OrderHistoryList = useStore((state: any) => state.OrderHistoryList);
   const tabBarHeight = useBottomTabBarHeight();
   const [showAnimation, setShowAnimation] = useState(false);
 
-  const navigationHandler = ({index, id, type}: any) => {
+  const navigationHandler = ({ index, id, type }: any) => {
     navigation.push('Details', {
       index,
       id,
@@ -43,7 +43,7 @@ const OrderHistoryScreen = ({navigation}: any) => {
 
   return (
     <View style={styles.ScreenContainer}>
-      <StatusBar backgroundColor={COLORS.primaryBlackHex} />
+
 
       {showAnimation ? (
         <PopUpAnimation
@@ -58,7 +58,7 @@ const OrderHistoryScreen = ({navigation}: any) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.ScrollViewFlex}>
         <View
-          style={[styles.ScrollViewInnerView, {marginBottom: tabBarHeight}]}>
+          style={[styles.ScrollViewInnerView, { marginBottom: tabBarHeight }]}>
           <View style={styles.ItemContainer}>
             <HeaderBar title="Order History" />
 

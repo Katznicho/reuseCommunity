@@ -12,6 +12,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import CreateDonationProduct from '../screens/CreateScreens/CreateDonationProduct';
 import ReuseStack from './ReuseStack';
 import HomeStack from './HomeStack';
+import OrderHistoryScreen from '../screens/OrderHistoryScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -68,7 +69,7 @@ const TabNavigator = () => {
           ),
         }}></Tab.Screen>
       <Tab.Screen
-        name="History"
+        name="Notification"
         component={MyNotificationStack}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
@@ -89,6 +90,21 @@ const TabNavigator = () => {
           tabBarIcon: ({ focused, color, size }) => (
             <AntDesign
               name="user"
+              size={25}
+              color={
+                focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
+              }
+            />
+          ),
+        }}></Tab.Screen>
+
+      <Tab.Screen
+        name="History"
+        component={OrderHistoryScreen}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <CustomIcon
+              name="bell"
               size={25}
               color={
                 focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
