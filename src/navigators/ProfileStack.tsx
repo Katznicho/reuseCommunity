@@ -27,7 +27,7 @@ const ProfileStack = () => {
         name="ProfileScreen"
         component={Profile}
         options={{
-          title: 'Your Profile',
+          title: 'My Profile',
           headerStyle: generalStyles.headerStyle,
           headerTitleStyle: generalStyles.titleHeaderStyles,
           headerTintColor: COLORS.primaryBlackHex,

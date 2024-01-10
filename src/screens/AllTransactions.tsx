@@ -28,9 +28,6 @@ const AllTransactions = () => {
     };
 
 
-    console.log("====================================")
-    console.log(hasNextPage)
-    console.log("===============================")
 
 
     return (

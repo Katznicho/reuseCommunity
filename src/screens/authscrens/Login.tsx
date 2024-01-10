@@ -76,9 +76,9 @@ const Login = () => {
 
     try {
       setLoading(true)
+      
       const headers = new Headers();
       headers.append('Accept', 'application/json');
-
       const body = new FormData();
       body.append('email', email.toLowerCase());
       body.append('password', password);
