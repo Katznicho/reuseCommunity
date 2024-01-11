@@ -13,7 +13,8 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme';
 import CustomIcon from './CustomIcon';
 import { useNavigation } from '@react-navigation/native';
-import CoffeeCard from './ProductCard';
+import ProductCard from './ProductCard';
+import CategoryController from './CategoryScroller';
 
 
 
@@ -44,6 +45,7 @@ const getCoffeeList = (category: string, data: any) => {
 const MarketPlace = () => {
 
     const navigation = useNavigation<any>()
+
     const CoffeeList = useStore((state: any) => state.CoffeeList);
     const BeanList = useStore((state: any) => state.BeanList);
     const addToCart = useStore((state: any) => state.addToCart);
@@ -169,7 +171,7 @@ const MarketPlace = () => {
 
             {/* Category Scroller */}
 
-            <ScrollView
+            {/* <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.CategoryScrollViewStyle}>
@@ -206,16 +208,20 @@ const MarketPlace = () => {
                         </TouchableOpacity>
                     </View>
                 ))}
-            </ScrollView>
+            </ScrollView> */}
 
-            {/* Coffee Flatlist */}
+            <CategoryController />
+
+            {/* Category Scroller */}
+
+            {/* Product Flatlist */}
 
             <FlatList
                 ref={ListRef}
                 horizontal
                 ListEmptyComponent={
                     <View style={styles.EmptyListContainer}>
-                        <Text style={styles.CategoryText}>No Coffee Available</Text>
+                        <Text style={styles.CategoryText}>No Product Available</Text>
                     </View>
                 }
                 showsHorizontalScrollIndicator={false}
@@ -232,7 +238,7 @@ const MarketPlace = () => {
                                     type: item.type,
                                 });
                             }}>
-                            <CoffeeCard
+                            <ProductCard
                                 id={item.id}
                                 index={item.index}
                                 type={item.type}
@@ -249,9 +255,9 @@ const MarketPlace = () => {
                 }}
             />
 
-            <Text style={styles.CoffeeBeansTitle}>Coffee Beans</Text>
+            <Text style={styles.CoffeeBeansTitle}>Near By </Text>
 
-            {/* Beans Flatlist */}
+            {/* Product Flatlist */}
 
             <FlatList
                 horizontal
@@ -272,7 +278,7 @@ const MarketPlace = () => {
                                     type: item.type,
                                 });
                             }}>
-                            <CoffeeCard
+                            <ProductCard
                                 id={item.id}
                                 index={item.index}
                                 type={item.type}
@@ -288,6 +294,46 @@ const MarketPlace = () => {
                     );
                 }}
             />
+
+            {/* most popular */}
+
+            <Text style={styles.CoffeeBeansTitle}>Most Popular </Text>
+            <FlatList
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                data={BeanList}
+                contentContainerStyle={[
+                    styles.FlatListContainer,
+                    { marginBottom: tabBarHeight },
+                ]}
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => {
+                    return (
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigation.push('Details', {
+                                    index: item.index,
+                                    id: item.id,
+                                    type: item.type,
+                                });
+                            }}>
+                            <ProductCard
+                                id={item.id}
+                                index={item.index}
+                                type={item.type}
+                                roasted={item.roasted}
+                                imagelink_square={item.imagelink_square}
+                                name={item.name}
+                                special_ingredient={item.special_ingredient}
+                                average_rating={item.average_rating}
+                                price={item.prices[2]}
+                                buttonPressHandler={CoffeCardAddToCart}
+                            />
+                        </TouchableOpacity>
+                    );
+                }}
+            />
+            {/* most popular */}
         </View>
     )
 }
@@ -320,7 +366,7 @@ const styles = StyleSheet.create({
         height: SPACING.space_20 * 3,
         fontFamily: FONTFAMILY.poppins_medium,
         fontSize: FONTSIZE.size_14,
-        color: COLORS.primaryWhiteHex,
+        color: COLORS.primaryBlackHex,
     },
     CategoryScrollViewStyle: {
         paddingHorizontal: SPACING.space_20,
@@ -358,7 +404,7 @@ const styles = StyleSheet.create({
     CoffeeBeansTitle: {
         fontSize: FONTSIZE.size_18,
         marginLeft: SPACING.space_30,
-        marginTop: SPACING.space_20,
+        marginTop: SPACING.space_15,
         fontFamily: FONTFAMILY.poppins_medium,
         color: COLORS.secondaryLightGreyHex,
     },

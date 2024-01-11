@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { COLORS } from '../theme/theme';
 import { BlurView } from '@react-native-community/blur';
@@ -9,10 +9,10 @@ import { useSelector } from 'react-redux';
 import ProfileStack from './ProfileStack';
 import MyNotificationStack from './MyNotificationStack';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import CreateDonationProduct from '../screens/CreateScreens/CreateDonationProduct';
 import ReuseStack from './ReuseStack';
 import HomeStack from './HomeStack';
 import OrderHistoryScreen from '../screens/OrderHistoryScreen';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 const Tab = createBottomTabNavigator();
@@ -28,7 +28,10 @@ const TabNavigator = () => {
       screenOptions={{
         tabBarHideOnKeyboard: true,
         headerShown: false,
-        tabBarShowLabel: false,
+        tabBarShowLabel: true,
+        tabBarActiveTintColor: COLORS.primaryOrangeHex,
+        tabBarInactiveTintColor: COLORS.primaryLightGreyHex,
+        // tabBarLabelStyle: styles.tabBarLabelStyle,
         tabBarStyle: styles.tabBarStyle,
         tabBarBackground: () => (
           <BlurView
@@ -43,6 +46,7 @@ const TabNavigator = () => {
         name="HomeTab"
         component={HomeStack}
         options={{
+          title: 'Home',
           tabBarIcon: ({ focused, color, size }) => (
             <CustomIcon
               name="home"
@@ -55,16 +59,20 @@ const TabNavigator = () => {
         }}></Tab.Screen>
 
       <Tab.Screen
-        name="Favorite"
+        name="Reuse"
         component={ReuseStack}
         options={{
+          title: 'Reuse',
           tabBarIcon: ({ focused, color, size }) => (
-            <CustomIcon
-              name="like"
-              size={25}
-              color={
-                focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
-              }
+            <Image
+              source={require('../assets/images/logo.png')}
+              style={{
+                width: 25,
+                height: 25,
+                tintColor: focused
+                  ? COLORS.primaryOrangeHex
+                  : COLORS.primaryLightGreyHex,
+              }}
             />
           ),
         }}></Tab.Screen>
@@ -83,6 +91,22 @@ const TabNavigator = () => {
           ),
         }}></Tab.Screen>
 
+      {/* history */}
+      <Tab.Screen
+        name="History"
+        component={OrderHistoryScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <MaterialCommunityIcons
+              name="history"
+              size={25}
+              color={
+                focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
+              }
+            />
+          ),
+        }}></Tab.Screen>
+      {/* history */}
       <Tab.Screen
         name="Profile"
         component={ProfileStack}
@@ -98,20 +122,7 @@ const TabNavigator = () => {
           ),
         }}></Tab.Screen>
 
-      <Tab.Screen
-        name="History"
-        component={OrderHistoryScreen}
-        options={{
-          tabBarIcon: ({ focused, color, size }) => (
-            <CustomIcon
-              name="bell"
-              size={25}
-              color={
-                focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex
-              }
-            />
-          ),
-        }}></Tab.Screen>
+
     </Tab.Navigator>
   );
 };
@@ -124,6 +135,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     elevation: 0,
     borderTopColor: 'transparent',
+
   },
   BlurViewStyles: {
     position: 'absolute',
