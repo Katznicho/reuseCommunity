@@ -6,7 +6,6 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import React from 'react';
-import { COLORS } from '../../theme/theme';
 import EmptyListAnimation from '../../components/EmptyListAnimation';
 import { generalStyles } from '../utils/generatStyles';
 import ProductFlatlist from '../../components/ProductFlatlist';

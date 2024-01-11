@@ -1,25 +1,26 @@
 /* eslint-disable prettier/prettier */
 import {
-    SafeAreaView,
     ScrollView,
     StyleSheet,
     View,
     Text,
     TouchableOpacity,
+    Dimensions,
+    Alert
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { useFirebase } from '../../hooks/useFirebase';
+import React, { useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Dialog, PanningProvider } from 'react-native-ui-lib';
-import { PayWithFlutterwave } from 'flutterwave-react-native';
-import { FLUTTER_WAVE_MERCHANT_KEY } from '@env';
-import { showMessage } from 'react-native-flash-message';
-import { generateTransactionRef } from '../utils/helpers/helpers';
-import { PAYMENT_STATUS } from '../utils/constants/constants';
-import { RedirectParams } from '../Types/types';
 import { generalStyles } from '../utils/generatStyles';
 import { COLORS } from '../../theme/theme';
-import { Dimensions } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { RootState } from '../../redux/store/dev';
+import { useSelector } from 'react-redux';
+import { PAYMENT_TYPE } from '../utils/constants/constants';
+import { PROCESSORDER } from '../utils/constants/routes';
+import { showMessage } from 'react-native-flash-message';
+import { ActivityIndicator } from '../../components/ActivityIndicator';
+
 
 const { width } = Dimensions.get('window');
 
@@ -27,39 +28,20 @@ const { width } = Dimensions.get('window');
 
 const PaymentSummary = () => {
 
-    const { updateProductPaymentStatus, storePaymentDetails, updatePaymentStatus } = useFirebase();
     const navigation = useNavigation<any>();
+    const { authToken } = useSelector((state: RootState) => state.user);
+    const [redirect_url, setRedirect_url] = useState('')
 
-    const handleOnRedirect = async (data: RedirectParams) => {
 
-
-        if (data.status === 'successful') {
-            //console.log("Payment Successful");
-
-            await updatePaymentStatus(data.tx_ref, PAYMENT_STATUS.COMPLETED);
-        }
-        else {
-            //console.log("Payment Cancelled");
-            await updatePaymentStatus(data.tx_ref, PAYMENT_STATUS.COMPLETED);
-        }
-        await updateProductPaymentStatus(params.item.id, PAYMENT_STATUS.COMPLETED, data.tx_ref);
-
-        showMessage({
-            message: "Payment Successful",
-            type: "success"
-
-        })
-        navigation.navigate("Payments");
-    };
 
 
 
     // const [ownerDetails, setOwnerDetails] = useState<any>();
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedPaymentMethod, setSelectedPaymentMethod] =
-        useState<string>('card');
+        useState<string>('Other');
 
-    const [transactionRef, setTransactionRef] = useState<string>("");
+
 
     const handlePaymentMethodSelection = (method: React.SetStateAction<string>) => {
         setSelectedPaymentMethod(method);
@@ -70,46 +52,91 @@ const PaymentSummary = () => {
 
     const { params } = useRoute<any>();
 
-    useEffect(() => {
-        setTransactionRef(generateTransactionRef(10));
-    }, [])
-
 
 
 
     const handlePayment = async () => {
 
         try {
-            if (!transactionRef) return;
-            else {
-                setLoading(true);
-                //update product payment status
-                await updateProductPaymentStatus(params.item.id, PAYMENT_STATUS.PENDING, transactionRef);
-
-                const paymentDeails = {
-                    productName: params.item?.title,
-                    totalAmount: params.item?.totalAmount,
-                    status: PAYMENT_STATUS.PENDING,
-                    paymentMethod: selectedPaymentMethod,
-                    userId: params.item?.userId,
-                    paidTo: "Reuse Team",
-                    owner: params?.ownerDetails,
-                    transactionRef: transactionRef
-                }
-
-                await storePaymentDetails(paymentDeails, transactionRef);
-
-                setIsVisible(true);
-            }
-
+            setIsVisible(true);
         } catch (error) {
             console.log(error);
         }
 
     };
 
+    const onMakePayment = async () => {
+
+        if (selectedPaymentMethod === 'Other') {
+            const formData = new FormData();
+            formData.append('amount', params.item?.total_amount);
+            formData.append('description', "Paying for reuse product");
+            formData.append('phone_number', params?.ownerDetails?.phone_number);
+            formData.append("product_id", params?.item?.id);
+            formData.append('callback', `https://reuse.risidev.com/finishPayment`);
+            formData.append('cancel_url', `https://reuse.risidev.com/cancelPayment`);
+            formData.append("payment_type", PAYMENT_TYPE.Product)
+
+            const headers = new Headers();
+            headers.append('Accept', 'application/json');
+            headers.append('Authorization', `Bearer ${authToken}`);
+            setLoading(true)
+
+
+            fetch(`${PROCESSORDER}`, {
+                method: 'POST',
+                headers,
+                body: formData
+            }).then((response) => {
+
+                return response.json()
+            }).then((result) => {
+
+                if (result?.response?.success) {
+                    setRedirect_url(result?.response?.message?.redirect_url)
+                    // return navigation.navigate('ReuseWebView', {
+                    //     url: result?.response?.message?.redirect_url
+                    // })
+                    return navigation.navigate("Donate", { screen: "MyWebView", params: { url: result?.response?.message?.redirect_url } })
+                }
+                else {
+                    setLoading(false);
+                    return showMessage({
+                        message: "Failed to Initiate Deposit",
+                        description: "Please try again",
+                        type: "info",
+                        icon: "info",
+                        duration: 3000,
+                        autoHide: true
+                    })
+
+                }
+
+            }).catch((error) => {
+                showMessage({
+                    message: 'Failed to create pin',
+                    description: 'Please try again',
+                    type: 'info',
+                    icon: 'info',
+                    duration: 3000,
+                    autoHide: true,
+                });
+                return setLoading(false);
+
+            })
+
+        }
+        else {
+            return Alert.alert("wallet")
+        }
+
+    }
+
     return (
-        <SafeAreaView style={generalStyles.ScreenContainer}>
+        <KeyboardAwareScrollView
+            style={[{ flex: 1, width: '100%' }, generalStyles.ScreenContainer]}
+            keyboardShouldPersistTaps="always"
+        >
             <ScrollView
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
@@ -131,58 +158,42 @@ const PaymentSummary = () => {
                     }}
                     height={500}>
                     <View>
-                        <Text>Select Payment Method</Text>
+                        <Text style={[generalStyles.textStyle]}>Select Payment Method</Text>
                     </View>
                     <View style={[styles.paymenthMethod]}>
                         <TouchableOpacity
                             onPress={() => {
-                                handlePaymentMethodSelection('mobilemoneyuganda');
+                                handlePaymentMethodSelection('Wallet');
                             }}
                             style={[
                                 styles.choosePayment,
                                 {
                                     backgroundColor:
-                                        selectedPaymentMethod === 'mobilemoneyuganda'
+                                        selectedPaymentMethod === 'Wallet'
                                             ? COLORS.primaryOrangeHex
                                             : COLORS.primaryLightGreyHex,
                                 },
                             ]}>
-                            <Text style={[styles.textStyle]}>Mobile Money</Text>
+                            <Text style={[styles.textStyle]}>Wallet</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
                             onPress={() => {
-                                handlePaymentMethodSelection('card');
+                                handlePaymentMethodSelection('Other');
                             }}
                             style={[
                                 styles.choosePayment,
                                 {
                                     backgroundColor:
-                                        selectedPaymentMethod === 'card'
+                                        selectedPaymentMethod === 'Other'
                                             ? COLORS.primaryOrangeHex
                                             : COLORS.primaryLightGreyHex,
                                 },
                             ]}
                         >
-                            <Text style={[styles.textStyle]}>Card Payment</Text>
+                            <Text style={[styles.textStyle]}>Other</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity
-                            onPress={() => {
-                                handlePaymentMethodSelection('ussd');
-                            }}
-                            style={[
-                                styles.choosePayment,
-                                {
-                                    backgroundColor:
-                                        selectedPaymentMethod === 'ussd'
-                                            ? COLORS.primaryOrangeHex
-                                            : COLORS.primaryLightGreyHex,
-                                },
-                            ]}
-                        >
-                            <Text style={[styles.textStyle]}>Card Payment</Text>
-                        </TouchableOpacity>
                     </View>
 
                     {/* payment buttons */}
@@ -199,47 +210,17 @@ const PaymentSummary = () => {
                             >
                                 <Text style={generalStyles.loginText}>{'Cancel Payment'}</Text>
                             </TouchableOpacity>
+                            <TouchableOpacity
+                                disabled={selectedPaymentMethod === ''}
+                                style={[generalStyles.loginContainer, { backgroundColor: COLORS.primaryOrangeHex, width: "100%" }]}
+                                onPress={() => onMakePayment()}
+
+                            >
+                                <Text style={generalStyles.loginText}>{'Make Payment'}</Text>
+                            </TouchableOpacity>
+                            {loading && <ActivityIndicator />}
                         </View>
-                        <View>
 
-
-                            <PayWithFlutterwave
-                                currency="UGX"
-                                onRedirect={handleOnRedirect}
-                                options={{
-                                    tx_ref: transactionRef ?? generateTransactionRef(10),
-                                    authorization: FLUTTER_WAVE_MERCHANT_KEY,
-                                    customer: {
-                                        email: params?.ownerDetails?.email,
-                                        name: `${params?.ownerDetails?.firstName} ${params?.ownerDetails?.lastName}`,
-                                        phonenumber: params?.ownerDetails?.phoneNumber
-
-                                    },
-                                    amount: parseInt(params.item?.totalAmount),
-                                    payment_options: selectedPaymentMethod,
-                                    customizations: {
-                                        title: 'Reuse App Payments',
-                                        description: `Payment for ${params.item?.title}  `,
-                                        logo: 'https://reuse-f0081.web.app/static/media/reuse.b7e1ca16.png',
-                                    }
-                                }}
-
-                                customButton={(props) => (
-
-
-                                    <TouchableOpacity
-                                        disabled={selectedPaymentMethod === '' || props.disabled}
-                                        style={[generalStyles.loginContainer, { backgroundColor: COLORS.primaryOrangeHex, width: "100%" }]}
-                                        onPress={props.onPress}
-
-                                    >
-                                        <Text style={generalStyles.loginText}>{'Make Payment'}</Text>
-                                    </TouchableOpacity>
-
-
-                                )}
-                            />
-                        </View>
                     </View>
                     {/* payment buttons */}
                 </Dialog>
@@ -255,7 +236,7 @@ const PaymentSummary = () => {
                             borderRadius: 20,
                             marginVertical: 20,
                             padding: 10,
-                            backgroundColor: COLORS.primaryDarkGreyHex,
+                            backgroundColor: COLORS.primaryBlackHex,
                         },
                     ]}>
                     <View style={styles.cardViewStyles}>
@@ -268,7 +249,7 @@ const PaymentSummary = () => {
                         </Text>
                         <Text
                             style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                            {params.item?.title}
+                            {params.item?.name}
                         </Text>
                         <View style={[styles.bottom]} />
                     </View>
@@ -298,7 +279,7 @@ const PaymentSummary = () => {
                         </Text>
                         <Text
                             style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                            {params.item?.totalAmount}
+                            {params.item?.total_amount}
                         </Text>
                         <View style={[styles.bottom]} />
                     </View>
@@ -313,7 +294,7 @@ const PaymentSummary = () => {
                         </Text>
                         <Text
                             style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                            {`${params?.ownerDetails?.firstName} ${params?.ownerDetails?.lastName}`}
+                            {`${params?.ownerDetails?.name}`}
                         </Text>
                         <View style={[styles.bottom]} />
                     </View>
@@ -381,7 +362,7 @@ const PaymentSummary = () => {
                 </View>
 
             </ScrollView>
-        </SafeAreaView>
+        </KeyboardAwareScrollView>
     );
 };
 
@@ -429,7 +410,7 @@ const styles = StyleSheet.create({
     },
     paymenthMethod: {
         // backgroundColor: COLORS.primaryWhiteHex,
-        elevation: 10,
+        // elevation: 10,
         borderRadius: 10,
     },
     choosePayment: {
@@ -439,6 +420,7 @@ const styles = StyleSheet.create({
         padding: 25,
         marginHorizontal: 20,
         marginVertical: 10,
+        width: width * 0.8,
     },
     textStyle: {
         color: COLORS.primaryWhiteHex

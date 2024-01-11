@@ -37,6 +37,8 @@ export const GET_DONOR_TOTALS = `${BASE_URL}/getDonorTotals`
 
 //produucts 
 export const CREATE_PRODUCT = `${BASE_URL}/createProduct`
+export const AVAILABLE_PRODUCTS = `${BASE_URL}/getAVailableProductsByPage`
+export const AVAILABLE_PRODUCTS_WITH_CATEGORY = `${BASE_URL}/getAvailableProductsByCategoryWithPag`
 
 
 //categories
