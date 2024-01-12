@@ -61,11 +61,11 @@ export default function useFetchInfinite(queryKey: string, url: string, status: 
         queryFn: ({ pageParam = 1 }) => fetcher(20, pageParam, url, status),
         getNextPageParam: (lastPage, allPages) => lastPage.nextPage,
         getPreviousPageParam: (firstPage, allPages) => firstPage.currentPage - 1,
-        staleTime: Infinity,
-        cacheTime: Infinity,
-        // refetchOnWindowFocus: true,
-        // refetchOnReconnect: true,
-        refetchInterval: 10000,
+        // staleTime: Infinity,
+        // cacheTime: Infinity,
+        refetchOnWindowFocus: true,
+        refetchOnReconnect: true,
+        refetchInterval: 20000,
     });
 
     return {

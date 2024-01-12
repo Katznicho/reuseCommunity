@@ -13,16 +13,11 @@ import { useRoute } from '@react-navigation/native';
 import { COLORS } from '../../theme/theme';
 import { generalStyles } from '../utils/generatStyles';
 import { convertFirebaseTimestampToReadableDate } from '../utils/helpers/helpers';
-import { useFirebase } from '../../hooks/useFirebase';
 
 const { width } = Dimensions.get('window');
 
 const PaymentDetails = () => {
     const { item } = useRoute<any>().params;
-
-
-
-
 
 
     return (

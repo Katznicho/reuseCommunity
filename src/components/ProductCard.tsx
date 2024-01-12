@@ -46,6 +46,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   price,
   buttonPressHandler,
 }) => {
+
   return (
     <LinearGradient
       start={{ x: 0, y: 0 }}
@@ -69,9 +70,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <Text style={styles.CardSubtitle}>{special_ingredient}</Text>
       <View style={styles.CardFooterRow}>
         <Text style={styles.CardPriceCurrency}>
-          $ <Text style={styles.CardPrice}>{price.price}</Text>
+          UGX <Text style={styles.CardPrice}>{price}</Text>
         </Text>
         <TouchableOpacity
+          activeOpacity={1}
           onPress={() => {
             buttonPressHandler({
               id,
@@ -123,7 +125,7 @@ const styles = StyleSheet.create({
   },
   CardRatingText: {
     fontFamily: FONTFAMILY.poppins_medium,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryBlackHex,
     lineHeight: 22,
     fontSize: FONTSIZE.size_14,
   },

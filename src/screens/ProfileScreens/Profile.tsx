@@ -1,9 +1,10 @@
-import { SafeAreaView, ScrollView } from 'react-native';
+import {  ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import HeadProfileCard from '../../components/HeadProfileCard';
 import ProfileDetailsCard from '../../components/ProfileCardDetails';
-import { COLORS } from '../../theme/theme';
 import { generalStyles } from '../utils/generatStyles';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
 
@@ -47,16 +48,18 @@ const Profile = () => {
 
   ]);
 
+  const tabBarHeight = useBottomTabBarHeight();
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: COLORS.primaryBlackHex,
-      }}
-
+    <KeyboardAwareScrollView
+      style={[{ flex: 1, width: '100%' }, generalStyles.ScreenContainer]}
+      keyboardShouldPersistTaps="always"
     >
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={generalStyles.scrollViewContentPadding}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: tabBarHeight }}
+        keyboardShouldPersistTaps="always"
+      >
         {/* header profile card */}
         <HeadProfileCard />
         {/* header profile card */}
@@ -71,7 +74,7 @@ const Profile = () => {
 
 
       </ScrollView>
-    </SafeAreaView>
+    </KeyboardAwareScrollView>
   );
 };
 

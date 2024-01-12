@@ -1,20 +1,18 @@
-import { Image, ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View, Dimensions } from 'react-native'
+import React, {  useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useFirebase } from '../../hooks/useFirebase';
 import { Switch } from 'react-native-ui-lib';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { COLORS } from '../../theme/theme';
 import { generalStyles } from '../utils/generatStyles';
 import { DEFAULT_USER_PROFILE, PRODUCT_STATUS } from '../utils/constants/constants';
 import Entypo from "react-native-vector-icons/Entypo";
-import { Dimensions } from 'react-native';
+
 
 const { width } = Dimensions.get('window');
 
 const MyProductDetails = () => {
 
-    const { getUserByUid } = useFirebase();
 
     const [ownerDetails, setOwnerDetails] = useState<any>();
 
@@ -22,15 +20,7 @@ const MyProductDetails = () => {
     const navigation = useNavigation<any>();
     const { params } = useRoute<any>();
 
-    useEffect(() => {
-        if (params.item) {
-            getUserByUid(params.item.userId).then((res) => {
-                setOwnerDetails(res);
 
-            })
-        }
-
-    }, [])
 
 
     return (

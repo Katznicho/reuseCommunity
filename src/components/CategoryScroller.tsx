@@ -1,95 +1,187 @@
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useState, useRef, useEffect } from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, FlatList, Dimensions, TextInput, ToastAndroid } from 'react-native'
+import React, { useMemo, useEffect, useRef, useState } from 'react'
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../theme/theme';
-import { useStore } from '../store/store';
-import { GET_ALL_CATEGORIES } from '../screens/utils/constants/routes';
+import { useApi } from '../hooks/useApi';
+import ProductCard from './ProductCard';
+import { useNavigation } from '@react-navigation/native';
+import CustomIcon from './CustomIcon';
 
 
-// const getCategoriesFromData = (data: any) => {
-//     let temp: any = {};
-//     for (let i = 0; i < data.length; i++) {
-//         if (temp[data[i].name] == undefined) {
-//             temp[data[i].name] = 1;
-//         } else {
-//             temp[data[i].name]++;
-//         }
-//     }
-//     let categories = Object.keys(temp);
-//     categories.unshift('All');
-//     return categories;
-// };
-
-const getCoffeeList = (category: string, data: any) => {
+const getDataList = (category: string, data: any) => {
     if (category == 'All') {
         return data;
     } else {
-        let coffeelist = data.filter((item: any) => item.name == category);
-        return coffeelist;
+        let datalist = data.filter((item: any) => item.category.name == category);
+        return datalist;
     }
 };
 
-const CategoryScroller = () => {
 
-    const ListRef: any = useRef<FlatList>();
-    const CoffeeList = useStore((state: any) => state.CoffeeList);
+const CategoryScroller = ({ dataList }: any) => {
 
-    const [categories, setCategories] = useState<any>([]);
+    const navigation = useNavigation<any>()
 
-    const [categoryIndex, setCategoryIndex] = useState({
+    const { data, error, isLoading, refetch } = useApi<any>({
+        endpoint: "getAllProductCategories",
+        params: {
+            "category": "getAllProductCategories"
+        },
+        queryOptions: {
+            enabled: true,
+            cacheTime: Infinity,
+            staleTime: Infinity,
+            refetchOnWindowFocus: true,
+            refetchOnMount: true,
+            refetchInterval: 10000,
+
+
+        },
+    })
+
+    const categoriesFromApi = data?.data || [];
+    const allOption = { id: 'all', name: 'All' }; // Modify the object structure based on your actual data
+
+    // Memoize the categories array
+    const categories = useMemo(() => [allOption, ...categoriesFromApi], [categoriesFromApi])
+
+    const [categoryIndex, setCategoryIndex] = useState<any>({
         index: 0,
-        category: categories[0],
-    });
+        category: "All",
+    })
 
-    const [sortedCoffee, setSortedCoffee] = useState(
-        getCoffeeList(categoryIndex.category, CoffeeList),
-    );
+    const [sortedData, setSortedData] = useState(getDataList(categoryIndex.category, dataList));
+
+    const updateSortedData = () => {
+
+        setSortedData(getDataList(categoryIndex.category, dataList));
+    };
+
+    const ListRef: any = useRef<FlatList>()
+
+    
 
     useEffect(() => {
-        fetch(GET_ALL_CATEGORIES, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then((res) => {
 
-            res.json().then((data) => {
+        updateSortedData();
+    }, [categoryIndex]);
 
-                //unhift categories and add all to the beginning
-                data.data.unshift({
-                    name: "All",
-                    id: "All"
-                })
-                setCategories(data.data);
-            }).catch((err) => {
-                console.log(err)
-            })
-        }).catch((err) => {
-            console.log(err)
-        })
+    const [searchText, setSearchText] = useState('');
 
-    }, [])
+    const searchProduct = (search: string) => {
+        if (search != '') {
+            ListRef?.current?.scrollToOffset({
+                animated: true,
+                offset: 0,
+            });
+            setCategoryIndex({ index: 0, category: "All" });
+            setSortedData([
+                ...getDataList("All", dataList).filter((item: any) =>
+                    item.name.toLowerCase().includes(search.toLowerCase()),
+                ),
+            ])
+        }
+    };
+
+    const resetSearchProduct = () => {
+        ListRef?.current?.scrollToOffset({
+            animated: true,
+            offset: 0,
+        });
+        setCategoryIndex({ index: 0, category: "All" });
+        setSortedData([...getDataList("All", dataList)]);
+        setSearchText('');
+    };
+
+
+    const ProductCardAddToCart = ({
+        id,
+        index,
+        name,
+        roasted,
+        imagelink_square,
+        special_ingredient,
+        type,
+        prices,
+    }: any) => {
+        // addToCart({
+        //     id,
+        //     index,
+        //     name,
+        //     roasted,
+        //     imagelink_square,
+        //     special_ingredient,
+        //     type,
+        //     prices,
+        // });
+        // calculateCartPrice();
+        ToastAndroid.showWithGravity(
+            `${name} is Added to Cart`,
+            ToastAndroid.SHORT,
+            ToastAndroid.CENTER,
+        );
+    };
 
     return (
         <View>
+            <View style={styles.InputContainerComponent}>
+                <TouchableOpacity
+                    onPress={() => {
+                        searchProduct(searchText);
+                    }}>
+                    <CustomIcon
+                        style={styles.InputIcon}
+                        name="search"
+                        size={FONTSIZE.size_18}
+                        color={
+                            searchText.length > 0
+                                ? COLORS.primaryOrangeHex
+                                : COLORS.primaryLightGreyHex
+                        }
+                    />
+                </TouchableOpacity>
+                <TextInput
+                    placeholder="Find Your Favorite..."
+                    value={searchText}
+                    onChangeText={text => {
+                        setSearchText(text);
+                        searchProduct(text);
+                    }}
+                    placeholderTextColor={COLORS.primaryLightGreyHex}
+                    style={styles.TextInputContainer}
+                />
+                {searchText.length > 0 ? (
+                    <TouchableOpacity
+                        onPress={() => {
+                            resetSearchProduct();
+                        }}>
+                        <CustomIcon
+                            style={styles.InputIcon}
+                            name="close"
+                            size={FONTSIZE.size_16}
+                            color={COLORS.primaryLightGreyHex}
+                        />
+                    </TouchableOpacity>
+                ) : (
+                    <></>
+                )}
+            </View>
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.CategoryScrollViewStyle}>
-                {categories.map((data: { name: any }, index: number) => (
+                {!isLoading && categories?.map((data: { name: string, id: number }, index: number) => (
                     <View
-                        key={index.toString()}
+                        key={data.id}
                         style={styles.CategoryScrollViewContainer}>
                         <TouchableOpacity
+                            activeOpacity={1}
                             style={styles.CategoryScrollViewItem}
                             onPress={() => {
                                 ListRef?.current?.scrollToOffset({
                                     animated: true,
                                     offset: 0,
                                 });
-                                setCategoryIndex({ index: index, category: categories[index] });
-                                setSortedCoffee([
-                                    ...getCoffeeList(categories[index], CoffeeList),
-                                ]);
+                                setCategoryIndex({ index: index, category: categories[index]?.name });
                             }}>
                             <Text
                                 style={[
@@ -109,6 +201,45 @@ const CategoryScroller = () => {
                     </View>
                 ))}
             </ScrollView>
+            <FlatList
+                ref={ListRef}
+                horizontal
+                ListEmptyComponent={
+                    <View style={styles.EmptyListContainer}>
+                        <Text style={styles.CategoryText}>No Products Available</Text>
+                    </View>
+                }
+                showsHorizontalScrollIndicator={false}
+                data={sortedData}
+                contentContainerStyle={styles.FlatListContainer}
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => {
+                    return (
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigation.push('Details', {
+                                    index: item.index,
+                                    id: item.id,
+                                    type: item.type,
+                                });
+                            }}>
+                            <ProductCard
+                                id={item.id}
+                                index={item?.id}
+                                type={item?.category?.name}
+                                roasted={item?.description}
+                                imagelink_square={item?.cover_image}
+                                name={item?.name}
+                                special_ingredient={item?.user?.name}
+                                average_rating={item?.rating}
+                                price={item?.total_amount ?? 0}
+                                buttonPressHandler={ProductCardAddToCart}
+                            />
+                        </TouchableOpacity>
+                    )
+                }}
+            />
+
         </View>
     )
 }
@@ -137,5 +268,34 @@ const styles = StyleSheet.create({
         width: SPACING.space_10,
         borderRadius: BORDERRADIUS.radius_10,
         backgroundColor: COLORS.primaryOrangeHex,
+    },
+    FlatListContainer: {
+        gap: SPACING.space_20,
+        paddingVertical: SPACING.space_20,
+        paddingHorizontal: SPACING.space_30,
+    },
+    EmptyListContainer: {
+        width: Dimensions.get('window').width - SPACING.space_30 * 2,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: SPACING.space_36 * 3.6,
+    },
+
+    InputContainerComponent: {
+        flexDirection: 'row',
+        margin: SPACING.space_30,
+        borderRadius: BORDERRADIUS.radius_20,
+        backgroundColor: COLORS.primaryDarkGreyHex,
+        alignItems: 'center',
+    },
+    InputIcon: {
+        marginHorizontal: SPACING.space_20,
+    },
+    TextInputContainer: {
+        flex: 1,
+        height: SPACING.space_20 * 3,
+        fontFamily: FONTFAMILY.poppins_medium,
+        fontSize: FONTSIZE.size_14,
+        color: COLORS.primaryBlackHex,
     },
 })
