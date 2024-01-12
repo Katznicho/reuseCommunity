@@ -82,7 +82,7 @@ const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
           <View style={styles.ImageHeaderBarContainerWithoutBack}>
             <TouchableOpacity
               onPress={() => {
-                ToggleFavourite(favourite, type, id);
+                // ToggleFavourite(favourite, type, id);
               }}>
               <GradientBGIcon
                 name="like"
@@ -130,7 +130,7 @@ const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
                     size={FONTSIZE.size_16}
                     color={COLORS.primaryOrangeHex}
                   />
-                  <Text style={styles.PropertyTextLast}>{ingredients}</Text>
+                  <Text style={styles.PropertyTextLast}>{ingredients} kgs</Text>
                 </View>
               </View>
             </View>
@@ -142,10 +142,10 @@ const ImageBackgroundInfo: React.FC<ImageBackgroundInfoProps> = ({
                   size={FONTSIZE.size_20}
                 />
                 <Text style={styles.RatingText}>{average_rating}</Text>
-                <Text style={styles.RatingCountText}>({ratings_count})</Text>
+                <Text style={styles.RatingCountText}>UGX ({ratings_count})</Text>
               </View>
               <View style={styles.RoastedContainer}>
-                <Text style={styles.RoastedText}>{roasted}</Text>
+                <Text style={styles.RoastedText}>UGX {roasted}</Text>
               </View>
             </View>
           </View>

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import {
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   View,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Dimensions,
+  Image
 } from 'react-native';
-import { useStore } from '../store/store';
 import {
   BORDERRADIUS,
   COLORS,
@@ -20,24 +20,21 @@ import ImageBackgroundInfo from '../components/ImageBackgroundInfo';
 import PaymentFooter from '../components/PaymentFooter';
 import { generalStyles } from './utils/generatStyles';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useRoute } from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 
-const DetailsScreen = ({ navigation, route }: any) => {
-  const ItemOfIndex = useStore((state: any) =>
-    route.params.type == 'Coffee' ? state.CoffeeList : state.BeanList,
-  )[route.params.index];
-  const addToFavoriteList = useStore((state: any) => state.addToFavoriteList);
-  const deleteFromFavoriteList = useStore(
-    (state: any) => state.deleteFromFavoriteList,
-  );
-  const addToCart = useStore((state: any) => state.addToCart);
-  const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
+const { width } = Dimensions.get('window');
 
-  const [price, setPrice] = useState(ItemOfIndex.prices[0]);
-  const [fullDesc, setFullDesc] = useState(false);
+const DetailsScreen = ({ navigation }: any) => {
+
+  const { item } = useRoute<any>().params;
+
+  const [price, setPrice] = useState(item?.total_amount);
+  const [fullDesc, setFullDesc] = useState(true);
 
   const ToggleFavourite = (favourite: boolean, type: string, id: string) => {
-    favourite ? deleteFromFavoriteList(type, id) : addToFavoriteList(type, id);
+    // favourite ? deleteFromFavoriteList(type, id) : addToFavoriteList(type, id);
   };
 
   const BackHandler = () => {
@@ -54,17 +51,17 @@ const DetailsScreen = ({ navigation, route }: any) => {
     type,
     price,
   }: any) => {
-    addToCart({
-      id,
-      index,
-      name,
-      roasted,
-      imagelink_square,
-      special_ingredient,
-      type,
-      prices: [{ ...price, quantity: 1 }],
-    });
-    calculateCartPrice();
+    // addToCart({
+    //   id,
+    //   index,
+    //   name,
+    //   roasted,
+    //   imagelink_square,
+    //   special_ingredient,
+    //   type,
+    //   prices: [{ ...price, quantity: 1 }],
+    // });
+    // calculateCartPrice();
     navigation.navigate('Cart');
   };
 
@@ -80,19 +77,32 @@ const DetailsScreen = ({ navigation, route }: any) => {
         contentContainerStyle={styles.ScrollViewFlex}>
         <ImageBackgroundInfo
           EnableBackHandler={true}
-          imagelink_portrait={ItemOfIndex.imagelink_portrait}
-          type={ItemOfIndex.type}
-          id={ItemOfIndex.id}
-          favourite={ItemOfIndex.favourite}
-          name={ItemOfIndex.name}
-          special_ingredient={ItemOfIndex.special_ingredient}
-          ingredients={ItemOfIndex.ingredients}
-          average_rating={ItemOfIndex.average_rating}
-          ratings_count={ItemOfIndex.ratings_count}
-          roasted={ItemOfIndex.roasted}
+          imagelink_portrait={item?.cover_image}
+          type={item?.category?.name}
+          id={item?.id}
+          favourite={item?.favourite}
+          name={item?.name}
+          special_ingredient={item?.user?.name}
+          ingredients={item.weight}
+          average_rating={item.rating}
+          ratings_count={item?.total_amount}
+          roasted={item?.total_amount}
           BackHandler={BackHandler}
           ToggleFavourite={ToggleFavourite}
         />
+
+        <View style={[generalStyles.flexStyles, { marginHorizontal: 10 }]}>
+          {
+            Array(item.rating).fill(item.rating).map((item, index) => (
+              <AntDesign
+                name="star"
+                color={COLORS.primaryOrangeHex}
+                size={15}
+                key={index}
+              />
+            ))
+          }
+        </View>
 
         <View style={styles.FooterInfoArea}>
           <Text style={styles.InfoTitle}>Description</Text>
@@ -102,7 +112,7 @@ const DetailsScreen = ({ navigation, route }: any) => {
                 setFullDesc(prev => !prev);
               }}>
               <Text style={styles.DescriptionText}>
-                {ItemOfIndex.description}
+                {item.description}
               </Text>
             </TouchableWithoutFeedback>
           ) : (
@@ -111,60 +121,37 @@ const DetailsScreen = ({ navigation, route }: any) => {
                 setFullDesc(prev => !prev);
               }}>
               <Text numberOfLines={3} style={styles.DescriptionText}>
-                {ItemOfIndex.description}
+                {item.description}
               </Text>
             </TouchableWithoutFeedback>
           )}
-          <Text style={styles.InfoTitle}>Size</Text>
-          <View style={styles.SizeOuterContainer}>
-            {ItemOfIndex.prices.map((data: any) => (
-              <TouchableOpacity
-                key={data.size}
-                onPress={() => {
-                  setPrice(data);
-                }}
-                style={[
-                  styles.SizeBox,
-                  {
-                    borderColor:
-                      data.size == price.size
-                        ? COLORS.primaryOrangeHex
-                        : COLORS.primaryDarkGreyHex,
-                  },
-                ]}>
-                <Text
-                  style={[
-                    styles.SizeText,
-                    {
-                      fontSize:
-                        ItemOfIndex.type == 'Bean'
-                          ? FONTSIZE.size_14
-                          : FONTSIZE.size_16,
-                      color:
-                        data.size == price.size
-                          ? COLORS.primaryOrangeHex
-                          : COLORS.secondaryLightGreyHex,
-                    },
-                  ]}>
-                  {data.size}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
         </View>
+        {/* more pictures */}
+        <View>
+          <Text style={styles.InfoTitle}>More Images</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {item?.images.map((item: string, index: number) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.imageContainer}
+                >
+                  <Image
+                    source={{ uri: item }}
+                    style={styles.image}
+                  />
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+        {/* more pictures */}
         <PaymentFooter
-          price={price}
+          price={item?.total_amount}
           buttonTitle="Add to Cart"
           buttonPressHandler={() => {
             addToCarthandler({
-              id: ItemOfIndex.id,
-              index: ItemOfIndex.index,
-              name: ItemOfIndex.name,
-              roasted: ItemOfIndex.roasted,
-              imagelink_square: ItemOfIndex.imagelink_square,
-              special_ingredient: ItemOfIndex.special_ingredient,
-              type: ItemOfIndex.type,
-              price: price,
+              item
             });
           }}
         />
@@ -215,6 +202,18 @@ const styles = StyleSheet.create({
   },
   SizeText: {
     fontFamily: FONTFAMILY.poppins_medium,
+  },
+  imageContainer: {
+    marginHorizontal: 5,
+    marginVertical: 5,
+    width: width * 0.6,
+    height: width * 0.6,
+  },
+  image: {
+    width: width * 0.6,
+    height: width * 0.6,
+    borderRadius: 10,
+    resizeMode: 'cover',
   },
 });
 

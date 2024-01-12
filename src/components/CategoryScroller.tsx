@@ -246,11 +246,13 @@ const CategoryScroller = ({ dataList }: any) => {
                 renderItem={({ item }) => {
                     return (
                         <TouchableOpacity
+                            activeOpacity={1}
                             onPress={() => {
                                 navigation.push('Details', {
                                     index: item.index,
                                     id: item.id,
                                     type: item.type,
+                                    item: item
                                 });
                             }}>
                             <ProductCard
