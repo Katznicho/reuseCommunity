@@ -7,17 +7,20 @@ import { useNavigation } from '@react-navigation/native';
 import CustomIcon from './CustomIcon';
 
 
-const getDataList = (category: string, data: any) => {
-    if (category == 'All') {
-        return data;
-    } else {
-        let datalist = data.filter((item: any) => item.category.name == category);
-        return datalist;
-    }
-};
+
 
 
 const CategoryScroller = ({ dataList }: any) => {
+
+
+    const getDataList = useMemo(() => (category: string, data: any) => {
+        if (category === 'All') {
+            return data;
+        } else {
+            let datalist = data.filter((item: any) => item.category.name === category);
+            return datalist;
+        }
+    }, []);
 
     const navigation = useNavigation<any>()
 
@@ -51,6 +54,17 @@ const CategoryScroller = ({ dataList }: any) => {
 
     const [sortedData, setSortedData] = useState(getDataList(categoryIndex.category, dataList));
 
+    //Search state to separate it from categoryIndex
+    const [searchState, setSearchState] = useState<any>({ searchText: '', category: 'All' });
+    //search state to seperate it from categoryIndex
+
+
+    useEffect(() => {
+        // Perform search logic when searchText or category changes
+        const filteredData = filterSearchResults(searchState.searchText, getDataList(searchState.category, dataList));
+        setSortedData(filteredData);
+    }, [searchState]);
+
     const updateSortedData = () => {
 
         setSortedData(getDataList(categoryIndex.category, dataList));
@@ -58,28 +72,41 @@ const CategoryScroller = ({ dataList }: any) => {
 
     const ListRef: any = useRef<FlatList>()
 
-    
+
 
     useEffect(() => {
-
         updateSortedData();
     }, [categoryIndex]);
 
     const [searchText, setSearchText] = useState('');
 
+
+
+    const filterSearchResults = (search: string, dataList: any) => {
+        return dataList.filter((item: any) =>
+            item?.name?.toLowerCase().includes(search.toLowerCase()) ||
+            item?.user?.name.toLowerCase().includes(search.toLowerCase()) ||
+            item?.category?.name.toLowerCase().includes(search.toLowerCase()) ||
+            item?.description?.toLowerCase().includes(search.toLowerCase())
+        );
+    };
+
+
+
+
     const searchProduct = (search: string) => {
-        if (search != '') {
+        if (search !== '') {
             ListRef?.current?.scrollToOffset({
                 animated: true,
                 offset: 0,
             });
-            setCategoryIndex({ index: 0, category: "All" });
-            setSortedData([
-                ...getDataList("All", dataList).filter((item: any) =>
-                    item.name.toLowerCase().includes(search.toLowerCase()),
-                ),
-            ])
+            // setCategoryIndex({ index: 0, category: 'All' });
+            return setSortedData([...filterSearchResults(search, getDataList('All', dataList))]);
         }
+        else {
+            return setSearchState({ searchText: search, category: 'All' });
+        }
+
     };
 
     const resetSearchProduct = () => {
@@ -145,6 +172,8 @@ const CategoryScroller = ({ dataList }: any) => {
                     onChangeText={text => {
                         setSearchText(text);
                         searchProduct(text);
+                        // Update searchState instead of directly setting categoryIndex
+
                     }}
                     placeholderTextColor={COLORS.primaryLightGreyHex}
                     style={styles.TextInputContainer}
@@ -182,6 +211,7 @@ const CategoryScroller = ({ dataList }: any) => {
                                     offset: 0,
                                 });
                                 setCategoryIndex({ index: index, category: categories[index]?.name });
+                                setSearchState({ searchText: '', category: categories[index]?.name });
                             }}>
                             <Text
                                 style={[
@@ -252,7 +282,7 @@ const styles = StyleSheet.create({
         marginBottom: SPACING.space_20,
     },
     CategoryScrollViewContainer: {
-        paddingHorizontal: SPACING.space_15,
+        paddingHorizontal: SPACING.space_10,
     },
     CategoryScrollViewItem: {
         alignItems: 'center',
@@ -271,7 +301,7 @@ const styles = StyleSheet.create({
     },
     FlatListContainer: {
         gap: SPACING.space_20,
-        paddingVertical: SPACING.space_20,
+        paddingVertical: SPACING.space_2,
         paddingHorizontal: SPACING.space_30,
     },
     EmptyListContainer: {
