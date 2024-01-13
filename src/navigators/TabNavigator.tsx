@@ -11,8 +11,7 @@ import MyNotificationStack from './MyNotificationStack';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import ReuseStack from './ReuseStack';
 import HomeStack from './HomeStack';
-import OrderHistoryScreen from '../screens/OrderHistoryScreen';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import CartScreen from '../screens/CartScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -93,12 +92,12 @@ const TabNavigator = () => {
 
       {/* history */}
       <Tab.Screen
-        name="History"
-        component={OrderHistoryScreen}
+        name="Cart"
+        component={CartScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons
-              name="history"
+            <AntDesign
+              name="shoppingcart"
               size={25}
               color={
                 focused ? COLORS.primaryOrangeHex : COLORS.primaryLightGreyHex

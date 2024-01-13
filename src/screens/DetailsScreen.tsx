@@ -22,6 +22,12 @@ import { generalStyles } from './utils/generatStyles';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useRoute } from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { addToCart, removeFromCart } from '../redux/store/slices/CartSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store/dev';
+import { showMessage } from 'react-native-flash-message';
+
 
 
 const { width } = Dimensions.get('window');
@@ -29,6 +35,14 @@ const { width } = Dimensions.get('window');
 const DetailsScreen = ({ navigation }: any) => {
 
   const { item } = useRoute<any>().params;
+  const { cartList } = useSelector((state: RootState) => state.cart);
+
+
+
+  const dispatch = useDispatch<any>()
+
+  //get user cart
+
 
   const [price, setPrice] = useState(item?.total_amount);
   const [fullDesc, setFullDesc] = useState(true);
@@ -41,35 +55,47 @@ const DetailsScreen = ({ navigation }: any) => {
     navigation.pop();
   };
 
-  const addToCarthandler = ({
-    id,
-    index,
-    name,
-    roasted,
-    imagelink_square,
-    special_ingredient,
-    type,
-    price,
-  }: any) => {
-    // addToCart({
-    //   id,
-    //   index,
-    //   name,
-    //   roasted,
-    //   imagelink_square,
-    //   special_ingredient,
-    //   type,
-    //   prices: [{ ...price, quantity: 1 }],
-    // });
-    // calculateCartPrice();
+  const addToCarthandler = (item: any) => {
+
+    try {
+      dispatch(addToCart(item))
+      // console.log("Added")
+      showMessage({
+        message: 'Added to cart',
+        description: 'Item added to cart',
+        type: 'success',
+        icon: 'success',
+        duration: 3000,
+        autoHide: true
+      })
+    }
+    catch (err) {
+      console.log(err)
+    }
     navigation.navigate('Cart');
   };
 
+
+  const removeFromCartHandler = (item: string) => {
+    dispatch(removeFromCart(item))
+    showMessage({
+      message: 'Removed from cart',
+      description: 'Item removed from cart',
+      type: 'success',
+      icon: 'success',
+      duration: 3000,
+      autoHide: true
+
+    })
+
+  }
+
+  const tabBarHeight = useBottomTabBarHeight();
   return (
     <KeyboardAwareScrollView
       style={[{ flex: 1, width: '100%' }, generalStyles.ScreenContainer]}
       keyboardShouldPersistTaps="always"
-      contentContainerStyle={{ paddingBottom: 100 }}
+      contentContainerStyle={{ paddingBottom: tabBarHeight }}
     >
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -83,8 +109,8 @@ const DetailsScreen = ({ navigation }: any) => {
           favourite={item?.favourite}
           name={item?.name}
           special_ingredient={item?.user?.name}
-          ingredients={item.weight}
-          average_rating={item.rating}
+          ingredients={item?.weight}
+          average_rating={item?.rating}
           ratings_count={item?.total_amount}
           roasted={item?.total_amount}
           BackHandler={BackHandler}
@@ -93,7 +119,7 @@ const DetailsScreen = ({ navigation }: any) => {
 
         <View style={[generalStyles.flexStyles, { marginHorizontal: 10 }]}>
           {
-            Array(item.rating).fill(item.rating).map((item, index) => (
+            Array(item?.rating).fill(item.rating)?.map((item, index) => (
               <AntDesign
                 name="star"
                 color={COLORS.primaryOrangeHex}
@@ -146,15 +172,24 @@ const DetailsScreen = ({ navigation }: any) => {
           </ScrollView>
         </View>
         {/* more pictures */}
-        <PaymentFooter
-          price={item?.total_amount}
-          buttonTitle="Add to Cart"
-          buttonPressHandler={() => {
-            addToCarthandler({
-              item
-            });
-          }}
-        />
+        {
+          //check if  item is in cart
+          cartList.some((cartItem: any) => cartItem.id === item.id) ? (
+            <PaymentFooter
+              price={item?.total_amount}
+              buttonTitle="Remove from Cart"
+              buttonPressHandler={() => removeFromCartHandler(item)}
+            />
+          ) : (
+
+            <PaymentFooter
+              price={item?.total_amount}
+              buttonTitle="Add to Cart"
+              buttonPressHandler={() => addToCarthandler(item)}
+            />
+          )
+        }
+
       </ScrollView>
     </KeyboardAwareScrollView>
   );

@@ -120,33 +120,7 @@ const CategoryScroller = ({ dataList }: any) => {
     };
 
 
-    const ProductCardAddToCart = ({
-        id,
-        index,
-        name,
-        roasted,
-        imagelink_square,
-        special_ingredient,
-        type,
-        prices,
-    }: any) => {
-        // addToCart({
-        //     id,
-        //     index,
-        //     name,
-        //     roasted,
-        //     imagelink_square,
-        //     special_ingredient,
-        //     type,
-        //     prices,
-        // });
-        // calculateCartPrice();
-        ToastAndroid.showWithGravity(
-            `${name} is Added to Cart`,
-            ToastAndroid.SHORT,
-            ToastAndroid.CENTER,
-        );
-    };
+
 
     return (
         <View>
@@ -265,7 +239,6 @@ const CategoryScroller = ({ dataList }: any) => {
                                 special_ingredient={item?.user?.name}
                                 average_rating={item?.rating}
                                 price={item?.total_amount ?? 0}
-                                buttonPressHandler={ProductCardAddToCart}
                             />
                         </TouchableOpacity>
                     )

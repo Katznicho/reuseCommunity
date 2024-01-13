@@ -1,13 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-
 export interface UserState {
   isLoggedIn: boolean;
   user: User
-  authToken: string
-
-
+  authToken: string,
 }
 
 interface User {
@@ -20,8 +17,6 @@ interface User {
   displayPicture: string,
   reuseType: string,
 }
-
-
 
 const initialState: UserState = {
   isLoggedIn: false,
@@ -36,12 +31,12 @@ const initialState: UserState = {
     phone: ""
   },
   authToken: '',
+
 };
 
 export const userSlice = createSlice({
   name: 'userSlice',
   initialState,
-
   reducers: {
     updateUserState: (state, action: PayloadAction<UserState>) => {
 
@@ -68,7 +63,7 @@ export const userSlice = createSlice({
     updateIsLoggedIn: (state, action: PayloadAction<boolean>) => {
       state.isLoggedIn = action.payload;
     },
-    
+
     updateProfilePicture: (state, action: PayloadAction<string>) => {
 
       if (state && state.user) {

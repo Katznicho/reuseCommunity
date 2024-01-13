@@ -15,7 +15,7 @@ interface PriceProps {
 
 interface PaymentFooterProps {
   price: string;
-  buttonPressHandler: any;
+  buttonPressHandler: () => void;
   buttonTitle: string;
 }
 
@@ -33,6 +33,7 @@ const PaymentFooter: React.FC<PaymentFooterProps> = ({
         </Text>
       </View>
       <TouchableOpacity
+        activeOpacity={1}
         style={styles.PayButton}
         onPress={() => buttonPressHandler()}>
         <Text style={styles.ButtonText}>{buttonTitle}</Text>

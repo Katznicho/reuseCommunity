@@ -2,20 +2,20 @@ import { Tuple, combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import thunk from 'redux-thunk';
 import userReducer from './slices/UserSlice';
-
+import cartReducer from "./slices/CartSlice"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['user'],
-  //blacklist: ['user'],
-  
+  whitelist: ['user', 'cart'],
+  //blacklist: ['user', 'cart'],
 
 };
 
 const rootReducer = combineReducers({
-  user: userReducer
+  user: userReducer,
+  cart: cartReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -24,8 +24,8 @@ export const store = configureStore({
   reducer: persistedReducer,
   // middleware: [thunk],
   middleware: () => new Tuple(
-        
-    ),
+
+  ),
 });
 
 export const persistor = persistStore(store);

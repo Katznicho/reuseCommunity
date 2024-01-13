@@ -2,10 +2,8 @@ import React from 'react';
 import {
   Dimensions,
   ImageBackground,
-  ImageProps,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -17,7 +15,6 @@ import {
   SPACING,
 } from '../theme/theme';
 import CustomIcon from './CustomIcon';
-import BGIcon from './BGIcon';
 
 const CARD_WIDTH = Dimensions.get('window').width * 0.32;
 
@@ -31,7 +28,6 @@ interface ProductCardProps {
   special_ingredient: string;
   average_rating: number;
   price: any;
-  buttonPressHandler: any;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -44,7 +40,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   special_ingredient,
   average_rating,
   price,
-  buttonPressHandler,
 }) => {
 
   return (
@@ -72,27 +67,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <Text style={styles.CardPriceCurrency}>
           UGX <Text style={styles.CardPrice}>{price}</Text>
         </Text>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => {
-            buttonPressHandler({
-              id,
-              index,
-              type,
-              roasted,
-              imagelink_square,
-              name,
-              special_ingredient,
-              prices: [{ ...price, quantity: 1 }],
-            });
-          }}>
-          <BGIcon
-            color={COLORS.primaryWhiteHex}
-            name={'add'}
-            BGColor={COLORS.primaryOrangeHex}
-            size={FONTSIZE.size_10}
-          />
-        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
