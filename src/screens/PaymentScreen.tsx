@@ -21,6 +21,7 @@ import CustomIcon from '../components/CustomIcon';
 import { useStore } from '../store/store';
 import PopUpAnimation from '../components/PopUpAnimation';
 import PaymentMethod from '../components/PaymentMethod';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 const PaymentList = [
   {
@@ -46,18 +47,20 @@ const PaymentList = [
 ];
 
 const PaymentScreen = ({ navigation, route }: any) => {
-  const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
-  const addToOrderHistoryListFromCart = useStore(
-    (state: any) => state.addToOrderHistoryListFromCart,
-  );
+
+  // const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
+  // const addToOrderHistoryListFromCart = useStore(
+  //   (state: any) => state.addToOrderHistoryListFromCart,
+  // );
+  const tabBarHeight = useBottomTabBarHeight();
 
   const [paymentMode, setPaymentMode] = useState('Credit Card');
   const [showAnimation, setShowAnimation] = useState(false);
 
   const buttonPressHandler = () => {
     setShowAnimation(true);
-    addToOrderHistoryListFromCart();
-    calculateCartPrice();
+    // addToOrderHistoryListFromCart();
+    // calculateCartPrice();
     setTimeout(() => {
       setShowAnimation(false);
       navigation.navigate('History');
@@ -77,7 +80,7 @@ const PaymentScreen = ({ navigation, route }: any) => {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.ScrollViewFlex}>
+        contentContainerStyle={[styles.ScrollViewFlex, { paddingBottom: tabBarHeight }]}>
         <View style={styles.HeaderContainer}>
           <TouchableOpacity
             onPress={() => {
@@ -172,7 +175,7 @@ const PaymentScreen = ({ navigation, route }: any) => {
 
       <PaymentFooter
         buttonTitle={`Pay with ${paymentMode}`}
-        price={{ price: route.params.amount, currency: '$' }}
+        price={route.params.amount}
         buttonPressHandler={buttonPressHandler}
       />
     </View>

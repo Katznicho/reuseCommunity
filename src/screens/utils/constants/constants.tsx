@@ -41,7 +41,9 @@ export const PAYMENT_STATUS = {
 export const PAYMENT_TYPE = {
     "Wallet": "Wallet",
     "Donation": "Donation",
-    "Product": "Product"
+    "Product": "Product",
+    "Other": "Other",
+    "Order": "Order"
 }
 
 export const APP_NAME = "Reuse";
