@@ -51,6 +51,9 @@ export const APP_NAME = "Reuse";
 //firebase collections
 export const USER_COLLECTION: string = "users";
 
+//documents
+export const USER_DOCUMENT_STORAGE: string = 'users/documents';
+
 //firebase storage
 export const PROFILE_STORAGE: string = "profile/images"
 export const PRODUCT_STORAGE: string = "product/images";
