@@ -70,13 +70,14 @@ export default function DocumentPickerComponent({
             });
 
             const { image, error } = await UploadImage(
-                user?.id,
-                document_details,
+                user?.UID,
+                document_details.pdfPath,
                 USER_DOCUMENT_STORAGE,
                 true,
             );
 
             if (error) {
+                console.log(error)
                 return showMessage({
                     message: 'Error...',
                     description: 'An error occurred please try again',
@@ -97,7 +98,7 @@ export default function DocumentPickerComponent({
                     duration: 2000,
                 });
 
-                console.log(image);
+                // console.log(image);
                 setMediaUrl(image);
             }
         } catch (err) {

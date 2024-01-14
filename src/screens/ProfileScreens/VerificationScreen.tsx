@@ -17,8 +17,16 @@ import Animated, {
     withTiming,
 } from 'react-native-reanimated';
 import { getErrorMessage } from '../utils/helpers/helpers'
+import { RootState } from '../../redux/store/dev'
+import { useSelector } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
+import { VERIFY_COMMUNITY } from '../utils/constants/routes'
 
 const VerificationScreen = () => {
+
+    const { authToken } = useSelector((state: RootState) => state.user);
+
+    const navigation = useNavigation<any>();
 
     const fileUrl = "https://reuse.risidev.com/storage/app/public/reuse_agreement.docx";
     const [loading, setLoading] = useState<boolean>(false)
@@ -119,8 +127,53 @@ const VerificationScreen = () => {
 
 
     const uploadDocuments = async () => {
+        try {
+            if (reuseAgreementUrl === '' || communityDocumentUrl === '') {
+                return showMessage({
+                    message: 'Error...',
+                    description: 'Please select all documents',
+                    type: 'info',
+                    icon: 'info',
+                    autoHide: true,
+                    duration: 3000,
+                })
 
+            }
+            else {
+                setLoading(true);
+                const headers = new Headers();
+                headers.append('Accept', 'application/json');
+                headers.append('Authorization', `Bearer ${authToken}`);
+                const formData = new FormData();
+                formData.append('reuse_agreement', reuseAgreementUrl);
+                formData.append('community_document', communityDocumentUrl);
+                const response = await fetch(`${VERIFY_COMMUNITY}`, {
+                    method: 'POST',
+                    headers,
+                    body: formData
+                });
+                const result = await response.json();
+                console.log(result);
+                if (result?.response?.success) {
+                    return navigation.navigate('MyWebView', {
+                        url: result?.response?.message?.redirect_url
+                    })
+                }
+                setLoading(false);
+                return showMessage({
+                    message: "Failed to Initiate Deposit",
+                    description: "Please try again",
+                    type: "info",
+                    icon: "info",
+                    duration: 3000,
+                    autoHide: true
+                })
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
+    console.log(reuseAgreementUrl);
 
     return (
         <KeyboardAwareScrollView
@@ -218,81 +271,114 @@ const VerificationScreen = () => {
                 {/* upload area */}
                 {/* reuse signed document */}
                 <>
-                    <View
-                        style={[
-                            generalStyles.flexStyles,
-                            styles.containerStyles,
-                        ]}>
-                        <View
-                            style={[
-                                generalStyles.centerContent,
-                                styles.paddingStyles,
-                            ]}>
-                            <Text style={[generalStyles.textStyle]}>
-                                Reuse Agreement
-                            </Text>
-                        </View>
+                    {
+                        reuseAgreementUrl ? (<View>
+                            <View
+                                style={[
+                                    generalStyles.centerContent,
+                                    styles.paddingStyles,
+                                ]}>
+                                <Text style={[generalStyles.textStyle,]}>
+                                    Uploaded Document
+                                </Text>
+                            </View>
+                        </View>) : (<View>
+                            <View
+                                style={[
+                                    generalStyles.flexStyles,
+                                    styles.containerStyles,
+                                ]}>
+                                <View
+                                    style={[
+                                        generalStyles.centerContent,
+                                        styles.paddingStyles,
+                                    ]}>
+                                    <Text style={[generalStyles.textStyle]}>
+                                        Reuse Agreement
+                                    </Text>
+                                </View>
 
-                        <View style={[styles.paddingStyles]}>
-                            <AntDesign
-                                name="upload"
-                                size={30}
-                                color={COLORS.primaryOrangeHex}
-                                onPress={() => setUploadReuseAgreement(true)}
-                            />
-                        </View>
+                                <View style={[styles.paddingStyles]}>
+                                    <AntDesign
+                                        name="upload"
+                                        size={30}
+                                        color={COLORS.primaryOrangeHex}
+                                        onPress={() => setUploadReuseAgreement(true)}
+                                    />
+                                </View>
 
-                        <DocumentPickerComponent
-                            openPicker={uploadReuseAgreement}
-                            setOpenPicker={setUploadReuseAgreement}
-                            setMediaUrl={setReuseAgreementUrl}
-                            field="Reuse Agreement"
-                        />
-                    </View>
+                                <DocumentPickerComponent
+                                    openPicker={uploadReuseAgreement}
+                                    setOpenPicker={setUploadReuseAgreement}
+                                    setMediaUrl={setReuseAgreementUrl}
+                                    field="Reuse Agreement"
+                                />
+                            </View>
 
-                    <Animated.Text style={[styles.errorColor, errorStyle]}>
-                        {getErrorMessage(errors, 'reuse_agreement')}
-                    </Animated.Text>
+                            <Animated.Text style={[styles.errorColor, errorStyle]}>
+                                {getErrorMessage(errors, 'reuse_agreement')}
+                            </Animated.Text>
+                        </View>)
+                    }
+
                 </>
                 {/* reuse signed document */}
 
                 {/* community document */}
                 <>
-                    <View
-                        style={[
-                            generalStyles.flexStyles,
-                            styles.containerStyles,
-                        ]}>
-                        <View
-                            style={[
-                                generalStyles.centerContent,
-                                styles.paddingStyles,
-                            ]}>
-                            <Text style={[generalStyles.textStyle]}>
-                                Community Document
-                            </Text>
-                        </View>
+                    {
+                        communityDocumentUrl ? (<View>
+                            <View
+                                style={[
+                                    generalStyles.centerContent,
+                                    styles.paddingStyles,
+                                ]}>
+                                <Text style={[generalStyles.textStyle,]}>
+                                    Uploaded Document
+                                </Text>
+                            </View>
+                        </View>) : (
+                            <View>
+                                <View
+                                    style={[
+                                        generalStyles.flexStyles,
+                                        styles.containerStyles,
+                                    ]}>
+                                    <View
+                                        style={[
+                                            generalStyles.centerContent,
+                                            styles.paddingStyles,
+                                        ]}>
+                                        <Text style={[generalStyles.textStyle,]}>
+                                            Community Document
+                                        </Text>
+                                    </View>
 
-                        <View style={[styles.paddingStyles]}>
-                            <AntDesign
-                                name="upload"
-                                size={30}
-                                color={COLORS.primaryOrangeHex}
-                                onPress={() => setUploadCommunityDocument(true)}
-                            />
-                        </View>
+                                    <View style={[styles.paddingStyles]}>
+                                        <AntDesign
+                                            name="upload"
+                                            size={30}
+                                            color={COLORS.primaryOrangeHex}
+                                            onPress={() => setUploadCommunityDocument(true)}
+                                        />
+                                    </View>
 
-                        <DocumentPickerComponent
-                            openPicker={uploadCommunityDocument}
-                            setOpenPicker={setUploadCommunityDocument}
-                            setMediaUrl={setCommunityDocumentUrl}
-                            field="Community Document"
-                        />
-                    </View>
+                                    <DocumentPickerComponent
+                                        openPicker={uploadCommunityDocument}
+                                        setOpenPicker={setUploadCommunityDocument}
+                                        setMediaUrl={setCommunityDocumentUrl}
+                                        field="Community Document"
+                                    />
+                                </View>
 
-                    <Animated.Text style={[styles.errorColor, errorStyle]}>
-                        {getErrorMessage(errors, 'community_document')}
-                    </Animated.Text>
+                                <Animated.Text style={[styles.errorColor, errorStyle]}>
+                                    {getErrorMessage(errors, 'community_document')}
+                                </Animated.Text>
+                            </View>
+
+                        )
+                    }
+
                 </>
 
                 {/* community document */}

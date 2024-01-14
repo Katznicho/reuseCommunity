@@ -20,12 +20,17 @@ export const USERPRODUCTS = `${BASE_URL}/getUserProducts`
 export const USERDELIVERIES = `${BASE_URL}/getUserDelivries`
 export const USERNOTIFICATIONS = `${BASE_URL}/getUserNotifications`
 
+// Route::post('communityUploadVerificationDocument', [AuthController::class, 'communityUploadVerificationDocument']);
+// Route::post('donorUpdateVerificationDocument', [AuthController::class, 'donorUpdateVerificationDocument']);
+
 
 //community 
 export const GET_COMMUNITY_DETAILS = `${BASE_URL}/getCommunityDetails`
 export const GET_COMMUNITY_TOTALS = `${BASE_URL}/getCommunityTotals`
 export const GET_COMMUNITIES = `${BASE_URL}/getCommunitysByPage`
 export const COMMUNITY_DELIVERIES = `${BASE_URL}/getCommunityDeliveries`
+export const VERIFY_COMMUNITY = `${BASE_URL}/communityUploadVerificationDocument`
+export const CHECK_COMMUNITY_DOCUMENTS = `${BASE_URL}/checkCommunityDocuments`
 
 
 //donor
