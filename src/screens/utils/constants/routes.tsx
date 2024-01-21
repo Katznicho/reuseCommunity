@@ -11,6 +11,7 @@ export const SAVE_DEVICE_INFO = `${BASE_URL}/auth/saveDeviceInfo`
 export const SETUP_WALLET_ACCOUNT = `${BASE_URL}/auth/setUpUserWalletAccount`;
 export const UPDATEWALLETBALANCE = `${BASE_URL}/auth/updateShowWalletBalance`
 export const UPDATEUSERAVATAR = `${BASE_URL}/auth/updateUserAvatarUrl`
+export const UPDATE_USER_LOCATION =  `${BASE_URL}/auth/updateUserLocation`
 
 //payments
 export const PROCESSORDER = `${BASE_URL}/processOrder`;
@@ -20,9 +21,6 @@ export const USERPRODUCTS = `${BASE_URL}/getUserProducts`
 export const USERDELIVERIES = `${BASE_URL}/getUserDelivries`
 export const USERNOTIFICATIONS = `${BASE_URL}/getUserNotifications`
 
-// Route::post('communityUploadVerificationDocument', [AuthController::class, 'communityUploadVerificationDocument']);
-// Route::post('donorUpdateVerificationDocument', [AuthController::class, 'donorUpdateVerificationDocument']);
-
 
 //community 
 export const GET_COMMUNITY_DETAILS = `${BASE_URL}/getCommunityDetails`
@@ -30,7 +28,9 @@ export const GET_COMMUNITY_TOTALS = `${BASE_URL}/getCommunityTotals`
 export const GET_COMMUNITIES = `${BASE_URL}/getCommunitysByPage`
 export const COMMUNITY_DELIVERIES = `${BASE_URL}/getCommunityDeliveries`
 export const VERIFY_COMMUNITY = `${BASE_URL}/communityUploadVerificationDocument`
-export const CHECK_COMMUNITY_DOCUMENTS = `${BASE_URL}/checkCommunityDocuments`
+export const CHECK_COMMUNITY_DOCUMENTS = `${BASE_URL}/checkCommunityDocuments`;
+export const  CHECK_STORED_COMMUNITY_DETAILS = `${BASE_URL}/getStoredCommunityDetails`
+export const STORE_COMMUNITY_DETAILS = `${BASE_URL}/storeCommunityDetails`
 
 
 //donor

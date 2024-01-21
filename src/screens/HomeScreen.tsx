@@ -11,6 +11,7 @@ import CheckUserWallet from '../components/CheckUserWallet';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import MarketPlace from '../components/MarketPlace';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import useGetUserLocation from '../hooks/useGetUserLocation';
 
 const HomeScreen = () => {
 
@@ -18,6 +19,11 @@ const HomeScreen = () => {
   let greetings = useShowGreeting()
 
   const tabBarHeight = useBottomTabBarHeight();
+
+  const { position } = useGetUserLocation()
+
+
+
 
 
   return (
@@ -28,7 +34,7 @@ const HomeScreen = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="always"
-        contentContainerStyle={{  paddingBottom: tabBarHeight }}
+        contentContainerStyle={{ paddingBottom: tabBarHeight }}
       >
         {/* App Header */}
         <HeaderBar title={`${greetings} ${user?.fname} !`} />

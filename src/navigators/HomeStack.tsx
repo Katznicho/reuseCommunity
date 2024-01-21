@@ -4,9 +4,6 @@ import HomeScreen from '../screens/HomeScreen';
 import CreatePin from '../screens/CreatePin';
 import Deposit from '../screens/Deposit';
 import { generalStyles } from '../screens/utils/generatStyles';
-import { TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Entypo from 'react-native-vector-icons/Entypo';
 import { COLORS } from '../theme/theme';
 import MyWebView from '../screens/MyWebView';
 import AllTransactions from '../screens/AllTransactions';
@@ -14,19 +11,40 @@ import TransactionDetails from '../screens/TransactionDetails';
 import DetailsScreen from '../screens/DetailsScreen';
 import CartScreen from '../screens/CartScreen';
 import PaymentScreen from '../screens/PaymentScreen';
+import ArrowBack from '../components/ArrowBack';
+import CommunityDetails from '../screens/CommunityDetails';
 
 const Stack = createNativeStackNavigator();
 
 const HomeStack = () => {
-    const navigation = useNavigation<any>();
+
     return (
-        <Stack.Navigator initialRouteName="HomeScreen" >
+        <Stack.Navigator initialRouteName="CommunityDetails" >
             <Stack.Screen
                 name="HomeScreen"
                 component={HomeScreen}
                 options={{ animation: 'slide_from_bottom', headerShown: false }}>
 
             </Stack.Screen>
+
+            {/* community details */}
+            <Stack.Screen
+                name="CommunityDetails"
+                component={CommunityDetails}
+                // options={{ animation: 'slide_from_bottom' }}
+                options={{
+                    animation: 'slide_from_bottom',
+                    title: 'Add Details',
+                    headerStyle: generalStyles.headerStyle,
+                    headerTitleStyle: generalStyles.titleHeaderStyles,
+                    headerTintColor: COLORS.primaryBlackHex,
+                    headerTitleAlign: 'center',
+                    headerLeft: () => <ArrowBack />
+
+                }}
+            ></Stack.Screen>
+            {/* community details */}
+
             <Stack.Screen
                 name="CreateWallet"
                 component={CreatePin}
@@ -38,19 +56,8 @@ const HomeStack = () => {
                     headerTitleStyle: generalStyles.titleHeaderStyles,
                     headerTintColor: COLORS.primaryBlackHex,
                     headerTitleAlign: 'center',
-                    headerLeft: () => (
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            onPress={() => navigation.goBack()}
-                            style={{ marginLeft: 10 }}
-                        >
-                            <Entypo
-                                name="chevron-left"
-                                color={COLORS.primaryBlackHex}
-                                size={28}
-                            />
-                        </TouchableOpacity>
-                    ),
+                    headerLeft: () => <ArrowBack />
+
                 }}
             >
 
@@ -65,19 +72,8 @@ const HomeStack = () => {
                     headerTitleStyle: generalStyles.titleHeaderStyles,
                     headerTintColor: COLORS.primaryBlackHex,
                     headerTitleAlign: 'center',
-                    headerLeft: () => (
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            onPress={() => navigation.goBack()}
-                            style={{ marginLeft: 10 }}
-                        >
-                            <Entypo
-                                name="chevron-left"
-                                color={COLORS.primaryBlackHex}
-                                size={28}
-                            />
-                        </TouchableOpacity>
-                    ),
+                    headerLeft: () => <ArrowBack />
+
                 }}>
             </Stack.Screen>
 
@@ -92,19 +88,7 @@ const HomeStack = () => {
                     headerTitleStyle: generalStyles.titleHeaderStyles,
                     headerTintColor: COLORS.primaryBlackHex,
                     headerTitleAlign: 'center',
-                    headerLeft: () => (
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            onPress={() => navigation.goBack()}
-                            style={{ marginLeft: 10 }}
-                        >
-                            <Entypo
-                                name="chevron-left"
-                                color={COLORS.primaryBlackHex}
-                                size={28}
-                            />
-                        </TouchableOpacity>
-                    ),
+                    headerLeft: () => <ArrowBack />
                 }}>
             </Stack.Screen>
             {/* all transactions */}
@@ -119,19 +103,7 @@ const HomeStack = () => {
                     headerTitleStyle: generalStyles.titleHeaderStyles,
                     headerTintColor: COLORS.primaryBlackHex,
                     headerTitleAlign: 'center',
-                    headerLeft: () => (
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            onPress={() => navigation.goBack()}
-                            style={{ marginLeft: 10 }}
-                        >
-                            <Entypo
-                                name="chevron-left"
-                                color={COLORS.primaryBlackHex}
-                                size={28}
-                            />
-                        </TouchableOpacity>
-                    ),
+                    headerLeft: () => <ArrowBack />
                 }}>
             </Stack.Screen>
             {/* transaction details */}
@@ -169,17 +141,7 @@ const HomeStack = () => {
                     headerTintColor: COLORS.primaryBlackHex,
                     headerTitleAlign: 'center',
                     headerLeft: () => (
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            onPress={() => navigation.goBack()}
-                            style={{ marginLeft: 10 }}
-                        >
-                            <Entypo
-                                name="chevron-left"
-                                color={COLORS.primaryBlackHex}
-                                size={28}
-                            />
-                        </TouchableOpacity>
+                        <ArrowBack />
                     ),
                 }}
             >
@@ -199,17 +161,7 @@ const HomeStack = () => {
                     headerTintColor: COLORS.primaryBlackHex,
                     headerTitleAlign: 'center',
                     headerLeft: () => (
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            onPress={() => navigation.goBack()}
-                            style={{ marginLeft: 10 }}
-                        >
-                            <Entypo
-                                name="chevron-left"
-                                color={COLORS.primaryBlackHex}
-                                size={28}
-                            />
-                        </TouchableOpacity>
+                        <ArrowBack />
                     ),
                 }}
             >

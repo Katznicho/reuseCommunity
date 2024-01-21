@@ -76,7 +76,7 @@ const Login = () => {
 
     try {
       setLoading(true)
-      
+
       const headers = new Headers();
       headers.append('Accept', 'application/json');
       const body = new FormData();
@@ -90,7 +90,6 @@ const Login = () => {
       })
         .then(response => response.json())
         .then(async result => {
-          console.log(result);
 
           if (result?.errors) {
             setErrors(result.errors);
