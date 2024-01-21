@@ -40,11 +40,6 @@ const HomeScreen = () => {
     },
   })
 
-  console.log("=====================")
-  console.log(data)
-
-
-
 
 
 
