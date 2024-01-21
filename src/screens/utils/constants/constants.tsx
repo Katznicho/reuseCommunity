@@ -56,6 +56,7 @@ export const USER_DOCUMENT_STORAGE: string = 'users/documents';
 
 //firebase storage
 export const PROFILE_STORAGE: string = "profile/images"
+export const COMMUNITY_STORAGE:string ="community/images";
 export const PRODUCT_STORAGE: string = "product/images";
 export const DOCUMENT_STORAGE: string = "document/images";
 export const PRODUCT_COLLECTION = "products";

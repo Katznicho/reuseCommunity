@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
 } from 'react-native';
@@ -12,15 +12,37 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import MarketPlace from '../components/MarketPlace';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import useGetUserLocation from '../hooks/useGetUserLocation';
+import { usePostQuery } from '../hooks/usePostQuery';
+import PopUp from '../components/Modals/PopUp';
+
 
 const HomeScreen = () => {
 
   const { user } = useSelector((state: RootState) => state.user);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
   let greetings = useShowGreeting()
 
   const tabBarHeight = useBottomTabBarHeight();
 
   const { position } = useGetUserLocation()
+
+
+  const { data, error, isLoading, refetch } = usePostQuery<any>({
+    endpoint: '/getStoredCommunityDetails',
+    params: {
+      "communityDetails": "communityDetails"
+    },
+    queryOptions: {
+      enabled: true,
+      refetchInterval: 2000,
+      refetchOnWindowFocus: true,
+      refetchOnMount: true,
+    },
+  })
+
+  console.log("=====================")
+  console.log(data)
+
 
 
 
@@ -36,6 +58,8 @@ const HomeScreen = () => {
         keyboardShouldPersistTaps="always"
         contentContainerStyle={{ paddingBottom: tabBarHeight }}
       >
+
+
         {/* App Header */}
         <HeaderBar title={`${greetings} ${user?.fname} !`} />
         {/* App Header */}
@@ -43,6 +67,13 @@ const HomeScreen = () => {
         {/* wallet */}
         <CheckUserWallet />
         {/* wallet */}
+
+        {/* show complete dailog */}
+        {
+          data != null && data?.data.length == 0 && (<PopUp />)
+        }
+        {/* show complete dailog  */}
+
 
         {/* market place */}
         <MarketPlace />

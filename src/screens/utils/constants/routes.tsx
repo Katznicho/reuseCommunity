@@ -30,7 +30,8 @@ export const COMMUNITY_DELIVERIES = `${BASE_URL}/getCommunityDeliveries`
 export const VERIFY_COMMUNITY = `${BASE_URL}/communityUploadVerificationDocument`
 export const CHECK_COMMUNITY_DOCUMENTS = `${BASE_URL}/checkCommunityDocuments`;
 export const  CHECK_STORED_COMMUNITY_DETAILS = `${BASE_URL}/getStoredCommunityDetails`
-export const STORE_COMMUNITY_DETAILS = `${BASE_URL}/storeCommunityDetails`
+export const STORE_COMMUNITY_DETAILS = `${BASE_URL}/storeCommunityDetails`;
+export const ALL_COMMUNITY_CATEGORIES =  `${BASE_URL}/getAllCommunityCatgeories`
 
 
 //donor

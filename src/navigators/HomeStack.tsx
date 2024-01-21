@@ -19,7 +19,7 @@ const Stack = createNativeStackNavigator();
 const HomeStack = () => {
 
     return (
-        <Stack.Navigator initialRouteName="CommunityDetails" >
+        <Stack.Navigator initialRouteName="HomeScreen" >
             <Stack.Screen
                 name="HomeScreen"
                 component={HomeScreen}
