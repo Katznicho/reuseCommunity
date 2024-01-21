@@ -140,7 +140,8 @@ export default function DocumentPickerComponent({
                 draggableIcon: {
                     backgroundColor: '#000',
                 },
-            }}>
+            }}
+            >
             <View style={styles.modalContainer}>
                 <Text style={styles.modalTitle}>Choose document</Text>
 

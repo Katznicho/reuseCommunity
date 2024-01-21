@@ -136,9 +136,10 @@ const VerificationScreen = () => {
                 if (result.response === 'success') {
                     //dispatch(loginUser());
                     showMessage({
-                        message: "Email Valid",
+                        message: "Email Verified",
                         description: "Your email has been verified",
                         icon: "success",
+                        type: "success",
                         autoHide: true,
                         duration: 3000
 

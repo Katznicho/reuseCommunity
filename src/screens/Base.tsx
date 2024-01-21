@@ -5,15 +5,13 @@ import AuthStack from '../navigators/AuthStack';
 import { AppDispatch, RootState } from '../redux/store/dev';
 import { useDispatch, useSelector } from 'react-redux';
 import DrawerNavigator from '../navigators/DrawerNavigator';
-import { updateProfilePicture } from '../redux/store/slices/UserSlice';
+
 
 
 const Stack = createNativeStackNavigator();
 
 const Base = () => {
     const { isLoggedIn } = useSelector((state: RootState) => state.user);
-    const dispatch = useDispatch<AppDispatch>();
-
 
 
 

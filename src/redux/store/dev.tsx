@@ -1,6 +1,6 @@
 import { Tuple, combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
-import thunk from 'redux-thunk';
+// import thunk from 'redux-thunk';
 import userReducer from './slices/UserSlice';
 import cartReducer from "./slices/CartSlice"
 import AsyncStorage from '@react-native-async-storage/async-storage';
