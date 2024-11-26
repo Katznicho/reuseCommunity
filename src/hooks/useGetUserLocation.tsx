@@ -31,9 +31,6 @@ const useGetUserLocation = () => {
                     body,
                 }).then((response) => response.json())
                     .then((result) => {
-                        // console.log("============================")
-                        // console.log(result)
-                        // console.log("============================")
                     })
                     .catch((error) => {
                         console.log("=======error=====================")
@@ -42,7 +39,9 @@ const useGetUserLocation = () => {
 
                 setPosition({ latitude, longitude });
             },
-            (error: any) => Alert.alert('GetCurrentPosition Error', JSON.stringify(error)),
+            (error: any) => {
+                // Alert.alert(error.message);
+            },
             { enableHighAccuracy: true, }
         );
     };
